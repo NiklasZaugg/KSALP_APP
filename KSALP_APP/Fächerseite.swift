@@ -7,42 +7,85 @@
 import SwiftUI
 
 struct Grade {
-    var name: String
-    var score: Double
+    var name: String//Name Note
+    var score: Double//Wert für Note
+    var weight: Double // Gewichtung für die note
 }
 
 struct ContentView: View {
     @State private var subjectName: String = "Fach"
     @State private var grades: [Grade] = [
-        Grade(name: "", score: 0)
+        Grade(name: "", score: 0, weight: 1)
     ]
     
-    @State private var average: Double = 0.0//var wird auf 0.0 definiert
+    @State private var average: Double = 0.0
     
     var body: some View {
         VStack {
-            TextField("Fach", text: $subjectName)
-                .padding()
+            // Fachname und Aktionen
+            Button(action: {
+                // Aktionen hinzufügen (Fach bearbeiten oder löschen)
+            }) {
+                HStack {
+                    Text(subjectName)
+                        .font(.title)
+                    Image(systemName: "chevron.down")//SFSymbol
+                }
+                .foregroundColor(.black)
+            }
+            .padding()
             
+            Spacer()
+
+            
+
+            
+            HStack(spacing: 0.0){
+                Spacer()
+                Spacer()
+                Spacer()
+                Text("Note")
+                    .padding(.leading, 85.0)
+                Spacer()
+
+                Text("Gewichtung")
+
+
+            }
+            .padding(.top)
+            
+            // Liste der Noten
             ScrollView {
                 VStack {
                     ForEach(grades.indices, id: \.self) { index in
                         HStack {
                             TextField("Prüfung", text: $grades[index].name)
-                            TextField("Note", value: $grades[index].score, formatter: NumberFormatter())
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .multilineTextAlignment(.center)
+                            TextField("Note", text: Binding<String>(
+                                get: { String(grades[index].score) },
+                                set: { grades[index].score = Double($0) ?? 0.0 }//Dezimal
+                            ))
+                            .multilineTextAlignment(.center)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            TextField("Gewichtung", text: Binding<String>(
+                                get: { String(grades[index].weight) },
+                                set: { grades[index].weight = Double($0) ?? 0.0 }//Dezimal
+                            ))
+                            .multilineTextAlignment(.center)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .frame(width:60)
+                            .opacity(0.5)
                         }
-                        .padding()
                     }
                 }
             }
             .padding()
             .foregroundColor(.black)
             
-        
+            // Durchschnittsanzeige
+            Text("Durchschnitt: \(String(format: "%.2f", average))")
             
-            Text("Durchschnitt: \(average)")
-            
+            // Hinzufügen neuer Noten und zum Berechnen des Durchschnitts
             Button(action: addGrade) {
                 Text("Neue Note hinzufügen")
             }
@@ -58,24 +101,32 @@ struct ContentView: View {
         .padding()
     }
     
+    // Funktion zum Hinzufügen einer neuen Note
     func addGrade() {
-        grades.append(Grade(name: "", score: 0))
+        grades.append(Grade(name: "", score: 0, weight: 1))
     }
     
+    // Funktion zum Berechnen des Durchschnitts
     func calculateAverage() {
+        //filter
         let validGrades = grades.filter { $0.score >= 0 }
+        
+        // kontrolle
         guard !validGrades.isEmpty else {
             print("Es sind keine gültigen Noten vorhanden.")
             return
         }
         
-        let totalScore = validGrades.reduce(0) { $0 + $1.score }
-        average = totalScore / Double(validGrades.count) // Update average
+        let totalScore = validGrades.reduce(0) { $0 + ($1.score * $1.weight) }
+        let totalWeight = validGrades.reduce(0) { $0 + $1.weight }
+        average = totalScore / totalWeight  //update average
     }
-}
+    }
+    
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+
+    struct ContentView_Previews: PreviewProvider {
+        static var previews: some View {
+            ContentView()
+        }
     }
-}
