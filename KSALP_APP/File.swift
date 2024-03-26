@@ -13,11 +13,10 @@ struct Grade {
 }
 
 struct ContentView: View {
-    @State private var subjectName: String = "Mathematik"
+    @State private var subjectName: String = ""
     @State private var grades: [Grade] = [
-        Grade(name: "Klausur 1", score: 80),
-        Grade(name: "Klausur 2", score: 85),
-        Grade(name: "Hausaufgaben", score: 90)
+        Grade(name: "test", score: 0),
+
     ]
     
     var body: some View {
