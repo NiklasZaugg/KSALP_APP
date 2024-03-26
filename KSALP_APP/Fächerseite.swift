@@ -1,56 +1,64 @@
-//
-//  KSALP_APP
-//
-//  Created by Niklas on 24.02.24.
-//
-
 import SwiftUI
 
 struct Grade {
-    var name: String//Name Note
-    var score: Double//Wert für Note
-    var weight: Double // Gewichtung für die note
+    var name: String // Name der Note
+    var score: Double // Wert der Note
+    var weight: Double // Gewichtung der Note
 }
 
 struct ContentView: View {
     @State private var subjectName: String = "Fach"
+    @State private var editingSubjectName: String = ""
     @State private var grades: [Grade] = [
         Grade(name: "", score: 0, weight: 1)
-    ]
+    ] {
+        didSet {
+            calculateAverage()
+        }
+    }
     
     @State private var average: Double = 0.0
-    
+    @State private var showActionSheet: Bool = false
+
+
     var body: some View {
         VStack {
             // Fachname und Aktionen
             Button(action: {
-                // Aktionen hinzufügen (Fach bearbeiten oder löschen)
+                // Zeigt das ActionSheet an
+                self.showActionSheet = true
             }) {
                 HStack {
                     Text(subjectName)
                         .font(.title)
-                    Image(systemName: "chevron.down")//SFSymbol
+                    Image(systemName: "chevron.down") // SFSymbol
                 }
                 .foregroundColor(.black)
             }
             .padding()
-            
+            .actionSheet(isPresented: $showActionSheet) {
+                ActionSheet(title: Text("Aktion wählen"), message: nil, buttons: [//2. actionsheet
+                    .default(Text("Fachtitel bearbeiten")) {
+                        self.editingSubjectName = self.subjectName
+                    },
+                    .destructive(Text("Fach löschen")) {//rot
+                        self.grades.removeAll()
+                    },
+                    .cancel()
+                ])
+            }
+
             Spacer()
-
             
-
-            
-            HStack(spacing: 0.0){
-                Spacer()
+            HStack{
                 Spacer()
                 Spacer()
                 Text("Note")
-                    .padding(.leading, 85.0)
+                    .padding(.leading, 100.0)
                 Spacer()
 
                 Text("Gewichtung")
-
-
+                    .padding(.trailing, 20.0)
             }
             .padding(.top)
             
@@ -63,18 +71,35 @@ struct ContentView: View {
                                 .multilineTextAlignment(.center)
                             TextField("Note", text: Binding<String>(
                                 get: { String(grades[index].score) },
-                                set: { grades[index].score = Double($0) ?? 0.0 }//Dezimal
+                                set: { grades[index].score = Double($0) ?? 0.0 } // Dezimal
                             ))
                             .multilineTextAlignment(.center)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .keyboardType(.decimalPad)
                             TextField("Gewichtung", text: Binding<String>(
                                 get: { String(grades[index].weight) },
-                                set: { grades[index].weight = Double($0) ?? 0.0 }//Dezimal
+                                set: { grades[index].weight = Double($0) ?? 0.0 } // Dezimal
                             ))
+                           
+                            .padding(.leading, 5)
                             .multilineTextAlignment(.center)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .frame(width:60)
+                            .frame(width: 60)
                             .opacity(0.5)
+                            .keyboardType(.decimalPad)
+                            
+
+                            Button(action: {
+                                // Löschfunktion für die note
+                                grades.remove(at: index)
+                            }) {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+
+
+
+                                    
+                            }
                         }
                     }
                 }
@@ -85,20 +110,16 @@ struct ContentView: View {
             // Durchschnittsanzeige
             Text("Durchschnitt: \(String(format: "%.2f", average))")
             
-            // Hinzufügen neuer Noten und zum Berechnen des Durchschnitts
+            // Hinzufügen neuer Noten
             Button(action: addGrade) {
                 Text("Neue Note hinzufügen")
-            }
-            .padding()
-            
-            Button(action: calculateAverage) {
-                Text("Durchschnitt berechnen")
             }
             .padding()
             
             Spacer()
         }
         .padding()
+        .onAppear(perform: calculateAverage) // Berechnet den Durchschnitt beim ersten Laden
     }
     
     // Funktion zum Hinzufügen einer neuen Note
@@ -106,27 +127,26 @@ struct ContentView: View {
         grades.append(Grade(name: "", score: 0, weight: 1))
     }
     
+    
+
+    
     // Funktion zum Berechnen des Durchschnitts
     func calculateAverage() {
-        //filter
         let validGrades = grades.filter { $0.score >= 0 }
-        
-        // kontrolle
-        guard !validGrades.isEmpty else {
-            print("Es sind keine gültigen Noten vorhanden.")
+        guard !validGrades.isEmpty else {//kontrolle
+            average = 0 // Setzt den Durchschnitt auf 0
             return
         }
         
         let totalScore = validGrades.reduce(0) { $0 + ($1.score * $1.weight) }
         let totalWeight = validGrades.reduce(0) { $0 + $1.weight }
-        average = totalScore / totalWeight  //update average
+        average = totalScore / totalWeight // Aktualisiert Durchschnitt
     }
-    }
-    
+}
 
 
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            ContentView()
-        }
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
+}
