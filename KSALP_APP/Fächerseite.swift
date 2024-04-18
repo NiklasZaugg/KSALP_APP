@@ -4,6 +4,7 @@ struct Grade {
     var name: String // Name der Prüfung
     var score: Double // Notenwert
     var weight: Double // Gewichtung der Note
+    var date: Date // Datum für jede Prüfung
 }
 
 struct ContentView: View {
@@ -16,7 +17,9 @@ struct ContentView: View {
     @State private var showingEditSubjectSheet: Bool = false // Steuert die Anzeige des Sheets für das Bearbeiten des Fachnamens
     @State private var newName: String = "" // Eingabefeld für den Namen der neuen Note
     @State private var newScore: String = "" // Eingabefeld für die Punktzahl der neuen Note
-    @State private var newWeight: String = "" // Eingabefeld für die Gewichtung der neuen Note
+    @State private var newWeight: String = "1.0" // Eingabefeld für die Gewichtung der neuen Note
+    @State private var newDate: Date = Date() // Standart - heutiges Datum
+
 
     var body: some View {
         VStack {
@@ -80,6 +83,8 @@ struct ContentView: View {
                             Spacer()
                             Text(String(format: "%.1f", grades[index].weight))
                             Spacer()
+                            Text(grades[index].date, style: .date) // Anzeige des Datums
+                            Spacer()
                             Button(action: {
                                 grades.remove(at: index) // Löschfunktion für die Note
                                 calculateAverage() // Berechnet den Durchschnitt neu
@@ -102,30 +107,34 @@ struct ContentView: View {
                 Text("Neue Note hinzufügen")
             }
             .padding()
-            .sheet(isPresented: $showingAddGradeSheet) { // Blatt für das Hinzufügen neuer Noten
+            .sheet(isPresented: $showingAddGradeSheet) { //Anzegige Sheet neue Noten
                 NavigationView {
-                    VStack {
-                        TextField("Prüfung", text: $newName)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                        TextField("Note", text: $newScore)
-                            .multilineTextAlignment(.center)
-                            .keyboardType(.decimalPad) // Tastaturtyp für Dezimalzahlen
-                            .padding()
-                        TextField("Gewichtung", text: $newWeight)
-                            .multilineTextAlignment(.center)
-                            .keyboardType(.decimalPad) // Tastaturtyp für Dezimalzahlen
-                            .padding()
-                    }
-                    .navigationBarTitle("Neue Note hinzufügen", displayMode: .inline)
+                    Form {
+                        Section(header: Text("Prüfungsdetails").font(.headline)) { //Formular standartform IOS
+                            TextField("Prüfung", text: $newName)
+                            TextField("Note", text: $newScore)
+                                .keyboardType(.decimalPad)
+                            HStack {
+                                Text("Gewichtung:")
+                                    .frame(width: 100, alignment: .leading) // Gibt dem Text eine feste Breite
+                                TextField("1.0", text: $newWeight)
+                                    .keyboardType(.decimalPad)
+                                    .multilineTextAlignment(.trailing)
+                                    .frame(width: 200) // Gibt dem TextField eine feste Breite für Konsistenz
+                            }
+                            .padding(.vertical, 8) // Gleiches Padding für alle Elemente
+
+                            DatePicker("Datum der Prüfung", selection: $newDate, displayedComponents: .date)
+                        }
+                    }                    .navigationBarTitle("Neue Note hinzufügen", displayMode: .inline)
                     .navigationBarItems(
                         leading: Button("Abbrechen") {
-                            showingAddGradeSheet = false // Schliesst das Sheet, ohne Änderungen zu speichern
+                            showingAddGradeSheet = false
                         },
                         trailing: Button("Fertig") {
-                            addGrade(name: newName, score: Double(newScore) ?? 0.0, weight: Double(newWeight) ?? 1.0)
-                            showingAddGradeSheet = false // Schliesst das Sheet nach dem Speichern
-                            newName = "" // Setzt die Eingabefelder zurück
+                            addGrade(name: newName, score: Double(newScore) ?? 0.0, weight: Double(newWeight) ?? 1.0, date: newDate)
+                            showingAddGradeSheet = false
+                            newName = ""
                             newScore = ""
                             newWeight = ""
                         }
@@ -137,12 +146,13 @@ struct ContentView: View {
         }
         .padding()
         .onAppear(perform: calculateAverage) // Berechnet den Durchschnitt beim ersten Laden der Ansicht
+        .preferredColorScheme(.light) // Erzwingt Light Mode für View
     }
     
     // Funktion zum Hinzufügen einer neuen Note
-    func addGrade(name: String, score: Double, weight: Double) {
-        grades.append(Grade(name: name, score: score, weight: weight)) // Fügt die neue Note hinzu
-        calculateAverage() // Berechnet den Durchschnitt sofort nach dem Hinzufügen
+    func addGrade(name: String, score: Double, weight: Double, date: Date) { //
+        grades.append(Grade(name: name, score: score, weight: weight, date: date)) //Datum wird zu den Noten hinzugefügt
+        calculateAverage()
     }
     
     // Funktion zum Berechnen des Durchschnitts
