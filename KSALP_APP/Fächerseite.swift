@@ -8,7 +8,7 @@ struct Grade {
 }
 
 struct ContentView: View {
-    @State private var subjectName: String = "Fach" // Name des Fachs
+    @State private var subjectName: String  // Name des Fachs
     @State private var editingSubjectName: String = "" // Hilfsvariable für das Bearbeiten des Fachnamens
     @State private var grades: [Grade] = [] // Liste der Noten
     @State private var average: Double = 0.0 // Durchschnittswert der Noten
@@ -19,7 +19,11 @@ struct ContentView: View {
     @State private var newScore: String = "" // Eingabefeld für die Punktzahl der neuen Note
     @State private var newWeight: String = "1.0" // Eingabefeld für die Gewichtung der neuen Note
     @State private var newDate: Date = Date() // Standart - heutiges Datum
-
+    
+    // Hinzufügen eines Initialisierers -- ermöglich fachnamensynchronisation
+    init(subjectName: String) {
+        self._subjectName = State(initialValue: subjectName)
+    }
 
     var body: some View {
         NavigationStack{
@@ -182,6 +186,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        SubjectAveragesView()
     }
 }

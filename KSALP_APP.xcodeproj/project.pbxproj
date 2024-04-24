@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		85982D202BD97E91000D9BD2 /* SubjectAveragesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */; };
 		859AA35F2BD455AD0011E909 /* GradeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859AA35E2BD455AD0011E909 /* GradeDetailView.swift */; };
 		85C101B22B8A1A1C00460B30 /* KSALP_APPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */; };
 		85C101B62B8A1A1F00460B30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85C101B52B8A1A1F00460B30 /* Assets.xcassets */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectAveragesView.swift; sourceTree = "<group>"; };
 		859AA35E2BD455AD0011E909 /* GradeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradeDetailView.swift; sourceTree = "<group>"; };
 		85C101AE2B8A1A1C00460B30 /* KSALP_APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KSALP_APP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KSALP_APPApp.swift; sourceTree = "<group>"; };
@@ -55,6 +57,7 @@
 			children = (
 				85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */,
 				85F389722BAC8157004B8B44 /* Fächerseite.swift */,
+				85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */,
 				859AA35E2BD455AD0011E909 /* GradeDetailView.swift */,
 				85C101B52B8A1A1F00460B30 /* Assets.xcassets */,
 				85C101B72B8A1A1F00460B30 /* Preview Content */,
@@ -141,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				859AA35F2BD455AD0011E909 /* GradeDetailView.swift in Sources */,
+				85982D202BD97E91000D9BD2 /* SubjectAveragesView.swift in Sources */,
 				85F389732BAC8157004B8B44 /* Fächerseite.swift in Sources */,
 				85C101B22B8A1A1C00460B30 /* KSALP_APPApp.swift in Sources */,
 			);

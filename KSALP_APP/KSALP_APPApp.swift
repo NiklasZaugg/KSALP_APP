@@ -11,7 +11,7 @@ import SwiftUI
 struct KSALP_APPApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SubjectAveragesView()
         }
     }
 }
