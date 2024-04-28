@@ -45,7 +45,7 @@ struct GradeDetailView: View {
                         Text("Datum:")
                             .frame(width: 140, alignment: .leading)
                         DatePicker("", selection: $tempGrade.date, displayedComponents: .date)
-                            .labelsHidden()  // Verbirgt das Label des DatePicker um eine sauberere UI zu gewährleisten
+                            .labelsHidden()  // Verbirgt das Label des DatePicker um eine sauberere UI 
                     }
                 }
             }        .navigationBarTitle("Prüfungsdetails", displayMode: .inline)
@@ -65,4 +65,3 @@ extension NumberFormatter {
         return formatter
     }()
 }
-

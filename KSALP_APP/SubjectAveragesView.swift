@@ -7,24 +7,17 @@
 
 import SwiftUI
 
-// Struktur für Fächer und ihre Durchschnitte
-struct Subject {
-    var name: String
-    var averageGrade: Double
-}
-
-// View zur Anzeige der Durchschnittsnoten verschiedener Fächer
 struct SubjectAveragesView: View {
-    let subjects: [Subject] = [
-        Subject(name: "Mathematik", averageGrade: 2.3),
-        Subject(name: "Englisch", averageGrade: 1.7),
-        Subject(name: "Biologie", averageGrade: 1.9)
+    @State var subjects: [Subject] = [
+        Subject(name: "Mathematik"),
+        Subject(name: "Englisch"),
+        Subject(name: "Biologie")
     ]
 
     var body: some View {
         NavigationStack {
-            List(subjects, id: \.name) { subject in
-                NavigationLink(destination: ContentView(subjectName: subject.name)) {
+            List($subjects, id: \.name) { $subject in
+                NavigationLink(destination: ContentView(subject: $subject)) {
                     HStack {
                         Text(subject.name)
                         Spacer()
@@ -32,8 +25,8 @@ struct SubjectAveragesView: View {
                     }
                 }
             }
-            .preferredColorScheme(.light) // Erzwingt Light Mode für View
             .navigationTitle("Fächerdurchschnitte")
+            .preferredColorScheme(.light)
         }
     }
 }
@@ -45,4 +38,3 @@ struct SubjectAveragesView_Previews: PreviewProvider {
         SubjectAveragesView()
     }
 }
-
