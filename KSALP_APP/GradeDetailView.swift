@@ -65,7 +65,7 @@ extension NumberFormatter {
     static let decimalFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 1 // Stellt sicher dass mindestens eine Dezimalstelle angezeigt wird
+        formatter.minimumFractionDigits = 1 // Stellt sicher  dass mindestens eine Dezimalstelle angezeigt wird
         formatter.maximumFractionDigits = 5 // Erlaubt bis zu fünf Dezimalstellen
         formatter.alwaysShowsDecimalSeparator = true // Zeigt immer einen Dezimaltrenner an
         return formatter
