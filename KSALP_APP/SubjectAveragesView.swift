@@ -16,7 +16,7 @@ struct SubjectAveragesView: View {
 
     var body: some View {
         NavigationStack {
-            List($subjects, id: \.name) { $subject in
+            List($subjects, id: \.id) { $subject in  // Verwendung der .id Property für eindeutige Identifikation
                 NavigationLink(destination: ContentView(subject: $subject)) {
                     HStack {
                         Text(subject.name)
@@ -26,10 +26,19 @@ struct SubjectAveragesView: View {
                 }
             }
             .navigationTitle("Fächerdurchschnitte")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Fach hinzufügen") {
+                        let newSubject = Subject(name: "Neues Fach")
+                        subjects.append(newSubject)
+                    }
+                }
+            }
             .preferredColorScheme(.light)
         }
     }
 }
+
 
 
 // Preview der neuen View

@@ -8,7 +8,8 @@ struct Grade {
     var date: Date
 }
 
-struct Subject {
+struct Subject: Identifiable {
+    let id = UUID() // Eindeutiger Identifier für jedes Fach
     var name: String
     var grades: [Grade] = []
     var averageGrade: Double {
@@ -55,6 +56,20 @@ struct ContentView: View {
                         },
                         .cancel()
                     ])
+                }
+                .sheet(isPresented: $showingEditSubjectSheet) { // Anzeige Sheet Fachtitel Bearbeiten
+                    NavigationView {
+                        Form {
+                            TextField("Fachname", text: $editingSubjectName)
+                        }
+                        .navigationBarTitle("Fachname bearbeiten", displayMode: .inline)
+                        .navigationBarItems(leading: Button("Abbrechen") {
+                            self.showingEditSubjectSheet = false
+                        }, trailing: Button("Fertig") {
+                            self.subject.name = self.editingSubjectName
+                            self.showingEditSubjectSheet = false
+                        })
+                    }
                 }
                 .sheet(isPresented: $showingAddGradeSheet) { // Anzeige Sheet neue Noten
                     NavigationView {
@@ -111,7 +126,7 @@ struct ContentView: View {
                                                 .scaledToFit()
                                                 .frame(width: 15, height: 15)
                                                 .foregroundColor(.gray)
-                                            Text(String(format: "%.1f", subject.grades[index].weight)) // Anzeige der Gewichtung
+                                            Text(subject.grades[index].weight.formattedAsInput()) // Dynamische Anzeige der Gewichtung
                                                 .font(.caption)
                                                 .foregroundColor(.gray)
                                         }
@@ -142,9 +157,10 @@ struct ContentView: View {
                                 .keyboardType(.decimalPad)
                             DatePicker("Datum der Prüfung", selection: $newDate, displayedComponents: .date)
                             Button("Fertig") {
+                                showingAddGradeSheet = false // Schliesst das Sheet
                                 let newGrade = Grade(name: newName, score: Double(newScore) ?? 0, weight: Double(newWeight) ?? 1.0, date: newDate)
                                 subject.grades.append(newGrade)
-                                showingAddGradeSheet = false // Schliesst das Sheet
+
                             }
                             .padding()
                         }
@@ -164,3 +180,24 @@ struct ContentView: View {
         .preferredColorScheme(.light) // Erzwingt Light Mode für View
     }
 }
+
+extension Double { // logik formatierungsstring für Gewichtung
+    func formattedAsInput() -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = false
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 2
+        
+        let stringValue = String(describing: self)
+        let decimalPart = stringValue.split(separator: ".").last ?? ""
+        let fractionDigits = decimalPart.count
+
+        formatter.minimumFractionDigits = fractionDigits
+        formatter.maximumFractionDigits = fractionDigits
+        
+        return formatter.string(from: NSNumber(value: self)) ?? "\(self)"
+    }
+}
+

@@ -21,6 +21,7 @@ struct GradeDetailView: View {
     }
 
     var body: some View {
+        NavigationStack {
             Form {
                 Section(header: Text("Details").font(.headline)) {
                     HStack {
@@ -33,28 +34,30 @@ struct GradeDetailView: View {
                         Text("Note:")
                             .frame(width: 100, alignment: .leading)
                         TextField("Note", value: $tempGrade.score, formatter: NumberFormatter.decimalFormatter)
+                            .keyboardType(.decimalPad)
                     }
                     
                     HStack {
                         Text("Gewichtung:")
                             .frame(width: 100, alignment: .leading)
                         TextField("Gewichtung", value: $tempGrade.weight, formatter: NumberFormatter.decimalFormatter)
+                            .keyboardType(.decimalPad)
                     }
                     
                     HStack {
                         Text("Datum:")
                             .frame(width: 140, alignment: .leading)
                         DatePicker("", selection: $tempGrade.date, displayedComponents: .date)
-                            .labelsHidden()  // Verbirgt das Label des DatePicker um eine sauberere UI 
+                            .labelsHidden()
                     }
                 }
-            }        .navigationBarTitle("Prüfungsdetails", displayMode: .inline)
-        .navigationBarItems(
-            trailing: Button("Fertig") {
-                self.grade = self.tempGrade  // Übertragen der Änderungen auf das Binding-Objekt
-                self.presentationMode.wrappedValue.dismiss()
             }
-        )
+            .navigationBarTitle("Prüfungsdetails", displayMode: .inline)
+            .navigationBarItems(trailing: Button("Fertig") {
+                self.grade = self.tempGrade
+                self.presentationMode.wrappedValue.dismiss()
+            })
+        }
     }
 }
 
@@ -62,6 +65,9 @@ extension NumberFormatter {
     static let decimalFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 1 // Stellt sicher dass mindestens eine Dezimalstelle angezeigt wird
+        formatter.maximumFractionDigits = 5 // Erlaubt bis zu fünf Dezimalstellen
+        formatter.alwaysShowsDecimalSeparator = true // Zeigt immer einen Dezimaltrenner an
         return formatter
     }()
 }
