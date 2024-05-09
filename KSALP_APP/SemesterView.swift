@@ -15,10 +15,24 @@ struct SemesterView: View {
 
     var body: some View {
         NavigationStack {
-            List(semesterData.semesters) { semester in // Eine Liste die alle Semester anzeigt. Jedes Semester ist ein klickbarer NavigationLink
-                NavigationLink(destination: SubjectAveragesView(semester: semester)) {
-                    Text(semester.name)
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) { // Zwei Spalten Grid
+                    ForEach(semesterData.semesters) { semester in // Eine Liste die alle Semester anzeigt. Jedes Semester ist ein klickbarer NavigationLink
+                        NavigationLink(destination: SubjectAveragesView(semester: semester)) {
+                            Text(semester.name)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity, minHeight: 100) // Konstante Textfeldgrösse für alle Semester
+                                .lineLimit(2) // Limitiert den Text auf 2 Zeilen
+                                .truncationMode(.tail) // Fügt "..." am Ende des Texts hinzu wenn zu lang
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        }
+
+                        .buttonStyle(PlainButtonStyle()) // Entfernt den Standard-Pfeil von NavigationLink
+                    }
                 }
+                .padding()
             }
             .navigationTitle("Semester Übersicht")
             .toolbar {
@@ -61,6 +75,7 @@ struct SemesterView: View {
         .preferredColorScheme(.light)
     }
 }
+
 
 class SemesterData: ObservableObject { //Class verwaltet die Daten der Semester.
     @Published var semesters: [Semester] = [ // @Published ermöglicht es der View auf Änderungen zu reagieren
