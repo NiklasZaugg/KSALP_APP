@@ -12,6 +12,7 @@ struct Subject: Identifiable {
     let id = UUID() // Eindeutiger Identifier für jedes Fach
     var name: String
     var grades: [Grade] = []
+    var isMaturarelevant: Bool
     var averageGrade: Double {
         let totalWeight = grades.reduce(0) { $0 + $1.weight }
         let totalScore = grades.reduce(0) { $0 + ($1.score * $1.weight) }
@@ -103,14 +104,16 @@ struct ContentView: View {
                                 newWeight = "1.0"
                                 newDate = Date()
                             }
-                        )
+                                .disabled(newScore.isEmpty) // Deaktiviert den Button, wenn newScore leer ist
+                             )
                     }
                 }
 
 
                 Spacer()
 
-                Text("Durchschnitt: \(String(format: "%.2f", subject.averageGrade))") // Zeigt den Durchschnittswert
+                Text("Durchschnitt: \(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade))") // Zeigt den Durchschnittswert oder "-" wenn keine Noten vorhanden sind
+
 
                 ScrollView {
                     VStack { // Liste der Prüfungen
@@ -132,7 +135,7 @@ struct ContentView: View {
                                         }
                                     }
                                     Spacer() // Trennt den Namen und die Note optisch
-                                    Text(String(format: "%.2f", subject.grades[index].score)) // Anzeige der Bewertung
+                                    Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade))//Anzeige der Bewertung der einzelnen Noten
                                         .frame(alignment: .trailing)
                                 }
                                 .padding()
