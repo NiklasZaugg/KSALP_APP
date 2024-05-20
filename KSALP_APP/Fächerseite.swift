@@ -18,6 +18,11 @@ struct Subject: Identifiable {
         let totalScore = grades.reduce(0) { $0 + ($1.score * $1.weight) }
         return totalWeight == 0 ? 0 : totalScore / totalWeight
     }
+    var roundedAverageGrade: Double {
+        let average = averageGrade
+        let rounded = (average * 2).rounded() / 2
+        return rounded
+    }
 }
 
 
@@ -37,41 +42,61 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Button(action: {
-                    self.showActionSheet = true // Zeigt das ActionSheet Titel an
-                }) {
-                    HStack {
-                        Text(subject.name).font(.title)
-                        Image(systemName: "chevron.down")
-                    }.foregroundColor(.black)
+                HStack {
+                    VStack {
+                        Text("Durchschnitt")
+                        Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade)) // Zeigt den Durchschnittswert oder "-" wenn keine Noten vorhanden sind
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
+                    .frame(maxWidth: .infinity)
+                    
+                    VStack {
+                        Text("Zeugnisnote")
+                        Text(subject.grades.isEmpty ? "-" : String(format: "%.1f", subject.roundedAverageGrade)) // Zeigt gerundeter Durchschnitt an
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
+                    .frame(maxWidth: .infinity)
                 }
-                .padding()
-                .actionSheet(isPresented: $showActionSheet) {
-                    ActionSheet(title: Text("Aktion wählen"), message: nil, buttons: [
-                        .default(Text("Fachtitel bearbeiten")) {
-                            self.editingSubjectName = self.subject.name
-                            self.showingEditSubjectSheet = true
-                        },
-                        .destructive(Text("Fach löschen")) {
-                            self.subject.grades.removeAll() // Löscht alle Noten
-                        },
-                        .cancel()
-                    ])
-                }
-                .sheet(isPresented: $showingEditSubjectSheet) { // Anzeige Sheet Fachtitel Bearbeiten
-                    NavigationView {
-                        Form {
-                            TextField("Fachname", text: $editingSubjectName)
+                .padding(.horizontal)
+
+                ScrollView {
+                    VStack { // Liste der Prüfungen
+                        ForEach(subject.grades.indices, id: \.self) { index in
+                            NavigationLink(destination: GradeDetailView(grade: $subject.grades[index])) { // Navigation zu GradeDetailView
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(subject.grades[index].name) // Anzeige des Namens der Prüfung
+                                            .frame(width: 100, alignment: .leading)
+                                        HStack {
+                                            Image(systemName: "scalemass") // Symbol für Gewichtung
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 15, height: 15)
+                                                .foregroundColor(.gray)
+                                            Text(subject.grades[index].weight.formattedAsInput()) // Dynamische Anzeige der Gewichtung
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                    }
+                                    Spacer() // Trennt den Namen und die Note optisch
+                                    Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.grades[index].score))//Anzeige der Bewertung der einzelnen Noten
+                                        .frame(alignment: .trailing)
+                                }
+                                .padding()
+                            }
                         }
-                        .navigationBarTitle("Fachname bearbeiten", displayMode: .inline)
-                        .navigationBarItems(leading: Button("Abbrechen") {
-                            self.showingEditSubjectSheet = false
-                        }, trailing: Button("Fertig") {
-                            self.subject.name = self.editingSubjectName
-                            self.showingEditSubjectSheet = false
-                        })
                     }
                 }
+                .foregroundColor(.black)
+
+                Button(action: {
+                    self.showingAddGradeSheet = true // Aktiviert das Sheet zum Hinzufügen neuer Noten
+                }) {
+                    Text("Neue Note hinzufügen")
+                }
+                .padding()
                 .sheet(isPresented: $showingAddGradeSheet) { // Anzeige Sheet neue Noten
                     NavigationView {
                         Form {
@@ -111,78 +136,51 @@ struct ContentView: View {
 
 
                 Spacer()
-
-                Text("Durchschnitt: \(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade))") // Zeigt den Durchschnittswert oder "-" wenn keine Noten vorhanden sind
-
-
-                ScrollView {
-                    VStack { // Liste der Prüfungen
-                        ForEach(subject.grades.indices, id: \.self) { index in
-                            NavigationLink(destination: GradeDetailView(grade: $subject.grades[index])) { // Navigation zu GradeDetailView
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(subject.grades[index].name) // Anzeige des Namens der Prüfung
-                                            .frame(width: 100, alignment: .leading)
-                                        HStack {
-                                            Image(systemName: "scalemass") // Symbol für Gewichtung
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 15, height: 15)
-                                                .foregroundColor(.gray)
-                                            Text(subject.grades[index].weight.formattedAsInput()) // Dynamische Anzeige der Gewichtung
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        }
-                                    }
-                                    Spacer() // Trennt den Namen und die Note optisch
-                                    Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade))//Anzeige der Bewertung der einzelnen Noten
-                                        .frame(alignment: .trailing)
-                                }
-                                .padding()
-                            }
-                        }
-                    }                }
-                .foregroundColor(.black)
-
-                Button(action: {
-                    self.showingAddGradeSheet = true // Aktiviert das Sheet zum Hinzufügen neuer Noten
-                }) {
-                    Text("Neue Note hinzufügen")
-                }
-                .padding()
-                .sheet(isPresented: $showingAddGradeSheet) { // Anzeige Sheet neue Noten
-                    NavigationView {
-                        Form {
-                            TextField("Prüfung", text: $newName)
-                            TextField("Note", text: $newScore)
-                                .keyboardType(.decimalPad)
-                            TextField("Gewichtung", text: $newWeight)
-                                .keyboardType(.decimalPad)
-                            DatePicker("Datum der Prüfung", selection: $newDate, displayedComponents: .date)
-                            Button("Fertig") {
-                                showingAddGradeSheet = false // Schliesst das Sheet
-                                let newGrade = Grade(name: newName, score: Double(newScore) ?? 0, weight: Double(newWeight) ?? 1.0, date: newDate)
-                                subject.grades.append(newGrade)
-
-                            }
-                            .padding()
-                        }
-                        .navigationBarTitle("Neue Note hinzufügen", displayMode: .inline)
-                        .navigationBarItems(
-                            leading: Button("Abbrechen") {
-                                showingAddGradeSheet = false
-                            }
-                        )
+            }
+            .navigationBarTitleDisplayMode(.inline) // Setze den NavigationBarTitle-DisplayMode auf inline
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Button(action: {
+                        self.showActionSheet = true // Zeigt das ActionSheet Titel an
+                    }) {
+                        HStack {
+                            Text(subject.name).font(.title)
+                            Image(systemName: "chevron.down")
+                        }.foregroundColor(.black)
+                    }
+                    .actionSheet(isPresented: $showActionSheet) {
+                        ActionSheet(title: Text("Aktion wählen"), message: nil, buttons: [
+                            .default(Text("Fachtitel bearbeiten")) {
+                                self.editingSubjectName = self.subject.name
+                                self.showingEditSubjectSheet = true
+                            },
+                            .destructive(Text("Fach löschen")) {
+                                self.subject.grades.removeAll() // Löscht alle Noten
+                            },
+                            .cancel()
+                        ])
                     }
                 }
-
-                Spacer()
+            }
+            .sheet(isPresented: $showingEditSubjectSheet) { // Anzeige Sheet Fachtitel Bearbeiten
+                NavigationView {
+                    Form {
+                        TextField("Fachname", text: $editingSubjectName)
+                    }
+                    .navigationBarTitle("Fachname bearbeiten", displayMode: .inline)
+                    .navigationBarItems(leading: Button("Abbrechen") {
+                        self.showingEditSubjectSheet = false
+                    }, trailing: Button("Fertig") {
+                        self.subject.name = self.editingSubjectName
+                        self.showingEditSubjectSheet = false
+                    })
+                }
             }
         }
-        .padding()
         .preferredColorScheme(.light) // Erzwingt Light Mode für View
     }
 }
+
 
 extension Double { // logik formatierungsstring für Gewichtung
     func formattedAsInput() -> String {

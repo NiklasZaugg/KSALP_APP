@@ -24,7 +24,7 @@
 		85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KSALP_APPApp.swift; sourceTree = "<group>"; };
 		85C101B52B8A1A1F00460B30 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		85C101B82B8A1A1F00460B30 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		85F389722BAC8157004B8B44 /* Fächerseite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fächerseite.swift"; sourceTree = "<group>"; };
+		85F389722BAC8157004B8B44 /* Fächerseite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fächerseite.swift"; sourceTree = "<group>"; usesTabs = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
