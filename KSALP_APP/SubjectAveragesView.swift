@@ -23,6 +23,21 @@ struct SubjectAveragesView: View {
      var overallAverageText: String { // Gibt den Gesamtdurchschnitt als Text zurück
          return overallAverage == 0 && semester.subjects.allSatisfy { $0.grades.isEmpty } ? "-" : String(format: "%.2f", overallAverage)
      }
+    
+    // Berechnung für Maturadurchschnitt
+    var maturaAverage: Double {
+        let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
+        let weightedAverages = maturaSubjects.map { $0.averageGrade }
+        let sum = weightedAverages.reduce(0, +)
+        return !weightedAverages.isEmpty ? sum / Double(weightedAverages.count) : 0
+    }
+
+    //Textdarstellung für Maturadurchschnitt
+    var maturaAverageText: String {
+        return maturaAverage == 0 ? "-" : String(format: "%.2f", maturaAverage)
+    }
+
+
 
 
 
@@ -32,6 +47,9 @@ struct SubjectAveragesView: View {
                 NavigationLink(destination: ContentView(subject: $subject)) {
                     HStack {
                         Text(subject.name) // Anzeige des Namens des Faches
+                            .lineLimit(1) // Begrenzung auf eine Zeile
+                            .truncationMode(.tail) // Text abschneiden mit "..."
+                            .frame(maxWidth: .infinity, alignment: .leading) // Maximale Breite auf die verfügbare Breite begrenzen
                         Spacer()
                         Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade)) // Anzeige des Durchschnitts des Faches auf zwei Dezimalstellen oder "-" wenn keine Noten vorhanden sind
 
@@ -48,6 +66,8 @@ struct SubjectAveragesView: View {
             }
             .preferredColorScheme(.light)
             Text("Gesamtdurchschnitt aller Fächer: \(overallAverageText)") // Anzeige Gesamtdurchschnitt oder "-" wenn 0.0
+                .padding()
+            Text("Maturadurchschnitt: \(maturaAverageText)") // Anzeige Maturadurchschnitt oder "-" wenn 0.0
                 .padding()
         }
         .sheet(isPresented: $showingAddSubjectSheet) {
