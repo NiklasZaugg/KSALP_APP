@@ -38,6 +38,7 @@ struct ContentView: View {
     @State private var editingIsMaturarelevant: Bool = false // Hilfsvariable für das Bearbeiten der Maturarelevanz
     @State private var showAdditionalOptions: Bool = false // Steuert die Anzeige der zusätzlichen Optionen
     @State private var showingAddFinalExamSheet: Bool = false // Steuert die Anzeige des Sheets für das Hinzufügen einer Abschlussprüfung
+    @State private var showingCalculatorSheet: Bool = false // Steuert die Anzeige des Wunschnotenrechners
     @State private var newName: String = "Neue Note" // Eingabefeld für den Namen der neuen Note
     @State private var newScore: String = "" // Eingabefeld für die Punktzahl der neuen Note
     @State private var newWeight: String = "1.0" // Eingabefeld für die Gewichtung der neuen Note
@@ -45,10 +46,14 @@ struct ContentView: View {
     @State private var finalExamName: String = "Abschlussprüfung" // Eingabefeld für den Namen der Abschlussprüfung
     @State private var finalExamScore: String = "" // Eingabefeld für die Punktzahl der Abschlussprüfung
     @State private var finalExamDate: Date = Date() // Standard - heutiges Datum
+    @State private var desiredGrade: String = "" // Eingabefeld für den gewünschten Durchschnitt
+    @State private var desiredWeight: String = "1.0" // Eingabefeld für die Gewichtung der gewünschten Note
+    @State private var requiredScore: String = "" // Ausgabe der benötigten Note
     
     var body: some View {
         NavigationStack {
             VStack {
+                Spacer()
                 HStack {
                     VStack {
                         Text("Durchschnitt")
@@ -116,10 +121,10 @@ struct ContentView: View {
 
                 
 
-                Button(action: {
+                Button(action: {//Button um Notenhinzufügen, Wunschrechner, etc. anzuzeigen.
                     self.showAdditionalOptions.toggle() // Umschalten der Anzeige der zusätzlichen Optionen
                 }) {
-                    Image(systemName: "plus.circle")
+                    Image(systemName: self.showAdditionalOptions ? "x.circle" : "plus.circle") // Symbol ändern
                         .font(.largeTitle)
                 }
                 .padding()
@@ -140,7 +145,7 @@ struct ContentView: View {
                         .disabled(subject.grades.isEmpty) // Deaktiviert den Button wenn keine Noten vorhanden sind
                         
                         Button(action: {
-                            // self.showingDesiredGradeCalculator = true // Aktiviert das Sheet für den Wunschnotenrechner
+                             self.showingCalculatorSheet = true // Aktiviert das Sheet für den Wunschnotenrechner
                         }) {
                             Text("Wunschnotenrechner")
                         }
@@ -291,6 +296,38 @@ struct ContentView: View {
                             finalExamDate = Date()
                         }
                         .disabled(finalExamScore.isEmpty) // Deaktiviert den Button, wenn finalExamScore leer ist
+                    )
+                }
+            }
+            .sheet(isPresented: $showingCalculatorSheet) { // Anzeige des Sheets für den Wunschnotenrechner
+                NavigationView {
+                    Form {
+                        TextField("Gewünschter Durchschnitt", text: $desiredGrade)
+                            .keyboardType(.decimalPad)
+                        TextField("Gewichtung", text: $desiredWeight)
+                            .keyboardType(.decimalPad)
+                        TextField("Benötigte Note", text: $requiredScore)
+                            .disabled(true) // Das Feld für die benötigte Note ist deaktiviert und wird berechnet
+                    }
+                    .navigationBarTitle("Wunschnotenrechner", displayMode: .inline)
+                    .navigationBarItems(
+                        leading: Button("Abbrechen") {
+                            showingCalculatorSheet = false
+                            
+                            // Reset der Eingabefelder falls der Benutzer abbricht
+                            desiredGrade = ""
+                            desiredWeight = "1.0"
+                            requiredScore = ""
+                        },
+                        trailing: Button("Berechnen") {
+                            let desiredAverage = Double(desiredGrade) ?? 0
+                            let weight = Double(desiredWeight) ?? 1.0
+                            let totalCurrentWeight = subject.grades.reduce(0) { $0 + $1.weight }
+                            let totalCurrentScore = subject.grades.reduce(0) { $0 + ($1.score * $1.weight) }
+                            
+                            let requiredScoreValue = (desiredAverage * (totalCurrentWeight + weight) - totalCurrentScore) / weight
+                            requiredScore = String(format: "%.2f", requiredScoreValue)
+                        }
                     )
                 }
             }
