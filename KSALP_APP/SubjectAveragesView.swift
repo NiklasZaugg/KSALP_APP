@@ -71,13 +71,13 @@ struct SubjectAveragesView: View {
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                     }
-                    .frame(height: 100) // Sicherstellen, dass die beiden Durchschnittsanzeigen gleich groß sind
+                    .frame(height: 100) // Sicherstellen, dass die beiden Durchschnittsanzeigen gleich gross sind
                     
                     Text("Fächer") // Überschrift für die Fächerliste
                         .font(.title)
                         .bold()
-                        .padding(.top, 4) // Geringerer Abstand nach oben
-                        .padding(.bottom, 4) // Geringerer Abstand nach unten
+                        .padding(.top, 4)
+                        .padding(.bottom, 4)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 8)
                         .background(Color.white)
@@ -85,7 +85,7 @@ struct SubjectAveragesView: View {
 
                     VStack(spacing: 0) {
                         ForEach($semester.subjects, id: \.id) { $subject in // Die Verwendung von .id gewährleistet eine eindeutige Identifikation der Listenelemente
-                            NavigationLink(destination: ContentView(subject: $subject)) {
+                            NavigationLink(destination: ContentView(subject: $subject, semester: semester)) { // Übergeben des semester-Objekts
                                 HStack {
                                     VStack(alignment: .leading) {
                                         Text(subject.name) // Anzeige des Namens des Faches
@@ -119,7 +119,7 @@ struct SubjectAveragesView: View {
                     }
                     .padding([.leading, .trailing], 8) // Fügt Paddings links und rechts zur gesamten Liste hinzu
                 }
-                .navigationTitle("Fächerdurchschnitte")
+                .navigationTitle(semester.name)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Fach hinzufügen") {
