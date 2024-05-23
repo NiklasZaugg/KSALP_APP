@@ -8,10 +8,10 @@
 import SwiftUI
 
 @main
-struct KSALP_APPApp: App {
+struct YourApp: App {
     var body: some Scene {
         WindowGroup {
-            SemesterView()
+            ContentView()
         }
     }
 }

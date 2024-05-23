@@ -85,7 +85,7 @@ struct SubjectAveragesView: View {
 
                     VStack(spacing: 0) {
                         ForEach($semester.subjects, id: \.id) { $subject in // Die Verwendung von .id gewährleistet eine eindeutige Identifikation der Listenelemente
-                            NavigationLink(destination: ContentView(subject: $subject, semester: semester)) { // Übergeben des semester-Objekts
+                            NavigationLink(destination: SubjectView(subject: $subject, semester: semester)) { // Übergeben des semester-Objekts
                                 HStack {
                                     VStack(alignment: .leading) {
                                         Text(subject.name) // Anzeige des Namens des Faches

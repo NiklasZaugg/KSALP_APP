@@ -21,42 +21,51 @@ struct GradeDetailView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             Form {
                 Section(header: Text("Details").font(.headline)) {
                     HStack {
-                        Text("Prüfung:")
-                            .frame(width: 100, alignment: .leading)
-                        TextField("Prüfung", text: $tempGrade.name)
+                        Text("Titel:")
+                        Spacer()
+                        TextField("Titel", text: $tempGrade.name)
+                            .multilineTextAlignment(.trailing)
                     }
-                    
+
                     HStack {
-                        Text("Note:")
-                            .frame(width: 100, alignment: .leading)
-                        TextField("Note", value: $tempGrade.score, formatter: NumberFormatter.decimalFormatter)
-                            .keyboardType(.decimalPad)
-                    }
-                    
-                    HStack {
-                        Text("Gewichtung:")
-                            .frame(width: 100, alignment: .leading)
-                        TextField("Gewichtung", value: $tempGrade.weight, formatter: NumberFormatter.decimalFormatter)
-                            .keyboardType(.decimalPad)
-                    }
-                    
-                    HStack {
-                        Text("Datum:")
-                            .frame(width: 140, alignment: .leading)
+                        Text("Datum der Prüfung:")
+                        Spacer()
                         DatePicker("", selection: $tempGrade.date, displayedComponents: .date)
                             .labelsHidden()
+                            .multilineTextAlignment(.trailing)
+                    }
+
+                    HStack {
+                        Text("Note:")
+                        Spacer()
+                        TextField("Note", value: $tempGrade.score, formatter: NumberFormatter.decimalFormatter)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+
+                    HStack {
+                        Text("Gewichtung:")
+                        Spacer()
+                        TextField("Gewichtung", value: $tempGrade.weight, formatter: NumberFormatter.decimalFormatter)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
                     }
                 }
             }
-            .navigationBarTitle("Prüfungsdetails", displayMode: .inline)
-            .navigationBarItems(trailing: Button("Fertig") {
-                self.grade = self.tempGrade
-                self.presentationMode.wrappedValue.dismiss()
-            })
+            .navigationBarTitle("Notendetails", displayMode: .inline)
+            .navigationBarItems(
+                leading: Button("Abbrechen") {
+                    presentationMode.wrappedValue.dismiss()
+                },
+                trailing: Button("Speichern") {
+                    grade = tempGrade
+                    presentationMode.wrappedValue.dismiss()
+                }
+            )
         }
     }
 }
@@ -65,9 +74,16 @@ extension NumberFormatter {
     static let decimalFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 1 // Stellt sicher  dass mindestens eine Dezimalstelle angezeigt wird
-        formatter.maximumFractionDigits = 5 // Erlaubt bis zu fünf Dezimalstellen
-        formatter.alwaysShowsDecimalSeparator = true // Zeigt immer einen Dezimaltrenner an
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 2
         return formatter
     }()
+}
+
+struct GradeDetailView_Previews: PreviewProvider {
+    @State static var grade = Grade(name: "Test", score: 1.0, weight: 1.0, date: Date(), isFinalExam: false)
+    
+    static var previews: some View {
+        GradeDetailView(grade: $grade)
+    }
 }
