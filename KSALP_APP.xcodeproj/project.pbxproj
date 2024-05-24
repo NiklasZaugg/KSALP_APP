@@ -11,6 +11,9 @@
 		8597DACC2BE02BF100AB15E4 /* SemesterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8597DACB2BE02BF100AB15E4 /* SemesterView.swift */; };
 		85982D202BD97E91000D9BD2 /* SubjectAveragesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */; };
 		859AA35F2BD455AD0011E909 /* GradeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859AA35E2BD455AD0011E909 /* GradeDetailView.swift */; };
+		859E0A852C00CB3F00032F70 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859E0A842C00CB3F00032F70 /* ScheduleView.swift */; };
+		859E0A882C0120D000032F70 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 859E0A872C0120D000032F70 /* Realm */; };
+		859E0A8A2C0120D000032F70 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 859E0A892C0120D000032F70 /* RealmSwift */; };
 		85C101B22B8A1A1C00460B30 /* KSALP_APPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */; };
 		85C101B62B8A1A1F00460B30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85C101B52B8A1A1F00460B30 /* Assets.xcassets */; };
 		85C101B92B8A1A1F00460B30 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85C101B82B8A1A1F00460B30 /* Preview Assets.xcassets */; };
@@ -23,6 +26,7 @@
 		8597DACB2BE02BF100AB15E4 /* SemesterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemesterView.swift; sourceTree = "<group>"; };
 		85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectAveragesView.swift; sourceTree = "<group>"; };
 		859AA35E2BD455AD0011E909 /* GradeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradeDetailView.swift; sourceTree = "<group>"; };
+		859E0A842C00CB3F00032F70 /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
 		85C101AE2B8A1A1C00460B30 /* KSALP_APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KSALP_APP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KSALP_APPApp.swift; sourceTree = "<group>"; };
 		85C101B52B8A1A1F00460B30 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -36,6 +40,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				859E0A8A2C0120D000032F70 /* RealmSwift in Frameworks */,
+				859E0A882C0120D000032F70 /* Realm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +73,7 @@
 				8597DACB2BE02BF100AB15E4 /* SemesterView.swift */,
 				85EC8B932BFF989300D7153A /* ContentView.swift */,
 				8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */,
+				859E0A842C00CB3F00032F70 /* ScheduleView.swift */,
 				859AA35E2BD455AD0011E909 /* GradeDetailView.swift */,
 				85C101B52B8A1A1F00460B30 /* Assets.xcassets */,
 				85C101B72B8A1A1F00460B30 /* Preview Content */,
@@ -98,6 +105,10 @@
 			dependencies = (
 			);
 			name = KSALP_APP;
+			packageProductDependencies = (
+				859E0A872C0120D000032F70 /* Realm */,
+				859E0A892C0120D000032F70 /* RealmSwift */,
+			);
 			productName = KSALP_APP;
 			productReference = 85C101AE2B8A1A1C00460B30 /* KSALP_APP.app */;
 			productType = "com.apple.product-type.application";
@@ -126,6 +137,9 @@
 				Base,
 			);
 			mainGroup = 85C101A52B8A1A1C00460B30;
+			packageReferences = (
+				859E0A862C0120D000032F70 /* XCRemoteSwiftPackageReference "realm-cocoa" */,
+			);
 			productRefGroup = 85C101AF2B8A1A1C00460B30 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -157,6 +171,7 @@
 				85EC8B942BFF989300D7153A /* ContentView.swift in Sources */,
 				85982D202BD97E91000D9BD2 /* SubjectAveragesView.swift in Sources */,
 				8597DACC2BE02BF100AB15E4 /* SemesterView.swift in Sources */,
+				859E0A852C00CB3F00032F70 /* ScheduleView.swift in Sources */,
 				85F389732BAC8157004B8B44 /* SubjectView.swift in Sources */,
 				85C101B22B8A1A1C00460B30 /* KSALP_APPApp.swift in Sources */,
 			);
@@ -364,6 +379,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		859E0A862C0120D000032F70 /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-cocoa";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		859E0A872C0120D000032F70 /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 859E0A862C0120D000032F70 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			productName = Realm;
+		};
+		859E0A892C0120D000032F70 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 859E0A862C0120D000032F70 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 85C101A62B8A1A1C00460B30 /* Project object */;
 }

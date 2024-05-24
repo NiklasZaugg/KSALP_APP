@@ -20,6 +20,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("PunktRechner", systemImage: "list.bullet")
                 }
+            ScheduleView()
+                .tabItem{
+                    Label("Stundenplan", systemImage: "list.bullet")
+                }
         }
     }
 }

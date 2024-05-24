@@ -5,6 +5,13 @@
 //  Created by Niklas on 29.04.24.
 //
 
+//
+//  SemesterView.swift
+//  KSALP_APP
+//
+//  Created by Niklas on 29.04.24.
+//
+
 import SwiftUI
 
 struct SemesterView: View {
@@ -60,7 +67,9 @@ struct SemesterView: View {
                                     .truncationMode(.tail) // Fügt "..." am Ende des Texts hinzu wenn zu lang
                                     .background(Color.blue)
                                     .cornerRadius(10)
-                            }                            .buttonStyle(PlainButtonStyle()) // Entfernt den Standard-Pfeil von NavigationLink
+                            }
+                            .buttonStyle(PlainButtonStyle()) // Entfernt den Standard-Pfeil von NavigationLink
+                            .disabled(isEditing) // NavigationLink deaktivieren, wenn im Bearbeitungsmodus
                         }
                     }
                 }
@@ -101,7 +110,7 @@ struct SemesterView: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button("Fertig") {
-                                if !newSemesterName.isEmpty {
+                                if (!newSemesterName.isEmpty) {
                                     semesterData.addSemester(name: newSemesterName)
                                     newSemesterName = "" // Setzt das Textfeld zurück
                                     showingAddSemester = false // Schliesst das Sheet

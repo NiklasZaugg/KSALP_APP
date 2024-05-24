@@ -32,25 +32,51 @@ struct SubjectAveragesView: View {
         return !weightedAverages.isEmpty ? sum / Double(weightedAverages.count) : 0
     }
     
-    //Textdarstellung für Maturadurchschnitt
+    // Textdarstellung für Maturadurchschnitt
     var maturaAverageText: String {
         return maturaAverage == 0 ? "-" : String(format: "%.2f", maturaAverage)
     }
     
+    // Rundungsfunktion auf die nächsten 0.5
+    func roundedToNearestHalf(_ value: Double) -> Double {
+        return (value * 2).rounded() / 2
+    }
     
+    // Berechnung der Pluspunkte und Minuspunkte
+    var maturaPlusPoints: Double {
+        let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
+        let plusPoints = maturaSubjects.map { max(roundedToNearestHalf($0.averageGrade) - 4, 0) }
+        return plusPoints.reduce(0, +)
+    }
+    
+    var maturaMinusPoints: Double {
+        let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
+        let minusPoints = maturaSubjects.map { max(4 - roundedToNearestHalf($0.averageGrade), 0) }
+        return minusPoints.reduce(0, +)
+    }
+    
+    // Textdarstellung für Plus- und Minuspunkte
+    var maturaPlusPointsText: String {
+        return maturaAverage == 0 ? "-" : String(format: "+%.1f", maturaPlusPoints)
+    }
+    
+    var maturaMinusPointsText: String {
+        return maturaAverage == 0 ? "-" : String(format: "-%.1f", maturaMinusPoints)
+    }
     var body: some View {
         NavigationStack {
-            ScrollView { 
+            ScrollView {
                 VStack(spacing: 4) { // Reduziert den Abstand zwischen den Elementen weiter
                     HStack {
                         VStack(alignment: .leading) {
-                            Text("Gesamtdurchschnitt ") // Text für Gesamtdurchschnitt
+                            Text("Gesamtschnitt ") // Text für Gesamtdurchschnitt
                                 .font(.headline)
                                 .foregroundColor(.black)
                             Text(overallAverageText) // Anzeige des Gesamtdurchschnitts
                                 .font(.largeTitle)
                                 .bold()
                                 .foregroundColor(.black)
+                            Spacer()
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -65,13 +91,33 @@ struct SubjectAveragesView: View {
                                 .font(.largeTitle)
                                 .bold()
                                 .foregroundColor(.black)
+                            Spacer() // Füllt den verfügbaren Platz, um die Durchschnittszahl auf die gleiche Höhe zu bringen
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text("Pluspunkte:") // Überschrift für Pluspunkte
+                                        .font(.caption)
+                                        .foregroundColor(.green)
+                                    Text("\(maturaPlusPointsText)") // Anzeige der Pluspunkte ohne Vorzeichen
+                                        .font(.caption)
+                                        .foregroundColor(.green)
+                                }
+                                VStack(alignment: .leading) {
+                                    Text("Minuspunkte:")
+                                        .font(.caption)
+                                        .foregroundColor(.red)
+                                    Text("\(maturaMinusPointsText)") // Anzeige der Minuspunkte ohne Vorzeichen
+                                        .font(.caption)
+                                        .foregroundColor(.red)
+                                }
+                            }
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                     }
-                    .frame(height: 100) // Sicherstellen, dass die beiden Durchschnittsanzeigen gleich gross sind
+                    .frame(height: 130) // Grösse Durchschnittsanzeigen
+
                     
                     Text("Fächer") // Überschrift für die Fächerliste
                         .font(.title)
