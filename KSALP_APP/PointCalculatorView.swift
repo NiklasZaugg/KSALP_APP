@@ -74,6 +74,7 @@ struct PointCalculatorView: View {
                     }
                 }
 
+
                 HStack(spacing: 10) {
                     Button(action: {
                         self.inputScore += "0"

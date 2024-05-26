@@ -12,8 +12,10 @@
 		85982D202BD97E91000D9BD2 /* SubjectAveragesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */; };
 		859AA35F2BD455AD0011E909 /* GradeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859AA35E2BD455AD0011E909 /* GradeDetailView.swift */; };
 		859E0A852C00CB3F00032F70 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859E0A842C00CB3F00032F70 /* ScheduleView.swift */; };
-		859E0A882C0120D000032F70 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 859E0A872C0120D000032F70 /* Realm */; };
-		859E0A8A2C0120D000032F70 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 859E0A892C0120D000032F70 /* RealmSwift */; };
+		859E0A8C2C01237A00032F70 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859E0A8B2C01237A00032F70 /* RealmManager.swift */; };
+		859E0A8E2C01253200032F70 /* class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859E0A8D2C01253200032F70 /* class.swift */; };
+		859E0AA92C01369400032F70 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 859E0AA82C01369400032F70 /* RealmSwift */; };
+		859E0AAA2C01370D00032F70 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 859E0AA82C01369400032F70 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		85C101B22B8A1A1C00460B30 /* KSALP_APPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */; };
 		85C101B62B8A1A1F00460B30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85C101B52B8A1A1F00460B30 /* Assets.xcassets */; };
 		85C101B92B8A1A1F00460B30 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85C101B82B8A1A1F00460B30 /* Preview Assets.xcassets */; };
@@ -21,12 +23,29 @@
 		85F389732BAC8157004B8B44 /* SubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F389722BAC8157004B8B44 /* SubjectView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		859E0A922C012D6600032F70 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				859E0AAA2C01370D00032F70 /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCalculatorView.swift; sourceTree = "<group>"; };
 		8597DACB2BE02BF100AB15E4 /* SemesterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemesterView.swift; sourceTree = "<group>"; };
 		85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectAveragesView.swift; sourceTree = "<group>"; };
 		859AA35E2BD455AD0011E909 /* GradeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradeDetailView.swift; sourceTree = "<group>"; };
 		859E0A842C00CB3F00032F70 /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
+		859E0A8B2C01237A00032F70 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
+		859E0A8D2C01253200032F70 /* class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = class.swift; sourceTree = "<group>"; };
+		859E0A982C01318D00032F70 /* project.xcworkspace */ = {isa = PBXFileReference; lastKnownFileType = wrapper.workspace; name = project.xcworkspace; path = KSALP_APP.xcodeproj/project.xcworkspace; sourceTree = "<group>"; };
 		85C101AE2B8A1A1C00460B30 /* KSALP_APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KSALP_APP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KSALP_APPApp.swift; sourceTree = "<group>"; };
 		85C101B52B8A1A1F00460B30 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -40,19 +59,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				859E0A8A2C0120D000032F70 /* RealmSwift in Frameworks */,
-				859E0A882C0120D000032F70 /* Realm in Frameworks */,
+				859E0AA92C01369400032F70 /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		859E0A8F2C012D6000032F70 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		85C101A52B8A1A1C00460B30 = {
 			isa = PBXGroup;
 			children = (
+				859E0A982C01318D00032F70 /* project.xcworkspace */,
 				85C101B02B8A1A1C00460B30 /* KSALP_APP */,
 				85C101AF2B8A1A1C00460B30 /* Products */,
+				859E0A8F2C012D6000032F70 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,13 +95,15 @@
 			isa = PBXGroup;
 			children = (
 				85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */,
-				85F389722BAC8157004B8B44 /* SubjectView.swift */,
-				85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */,
-				8597DACB2BE02BF100AB15E4 /* SemesterView.swift */,
-				85EC8B932BFF989300D7153A /* ContentView.swift */,
 				8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */,
 				859E0A842C00CB3F00032F70 /* ScheduleView.swift */,
 				859AA35E2BD455AD0011E909 /* GradeDetailView.swift */,
+				8597DACB2BE02BF100AB15E4 /* SemesterView.swift */,
+				85EC8B932BFF989300D7153A /* ContentView.swift */,
+				85F389722BAC8157004B8B44 /* SubjectView.swift */,
+				85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */,
+				859E0A8B2C01237A00032F70 /* RealmManager.swift */,
+				859E0A8D2C01253200032F70 /* class.swift */,
 				85C101B52B8A1A1F00460B30 /* Assets.xcassets */,
 				85C101B72B8A1A1F00460B30 /* Preview Content */,
 			);
@@ -99,6 +128,7 @@
 				85C101AA2B8A1A1C00460B30 /* Sources */,
 				85C101AB2B8A1A1C00460B30 /* Frameworks */,
 				85C101AC2B8A1A1C00460B30 /* Resources */,
+				859E0A922C012D6600032F70 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -106,8 +136,7 @@
 			);
 			name = KSALP_APP;
 			packageProductDependencies = (
-				859E0A872C0120D000032F70 /* Realm */,
-				859E0A892C0120D000032F70 /* RealmSwift */,
+				859E0AA82C01369400032F70 /* RealmSwift */,
 			);
 			productName = KSALP_APP;
 			productReference = 85C101AE2B8A1A1C00460B30 /* KSALP_APP.app */;
@@ -138,7 +167,7 @@
 			);
 			mainGroup = 85C101A52B8A1A1C00460B30;
 			packageReferences = (
-				859E0A862C0120D000032F70 /* XCRemoteSwiftPackageReference "realm-cocoa" */,
+				859E0AA52C01369400032F70 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = 85C101AF2B8A1A1C00460B30 /* Products */;
 			projectDirPath = "";
@@ -168,9 +197,11 @@
 			files = (
 				859AA35F2BD455AD0011E909 /* GradeDetailView.swift in Sources */,
 				8594B9BA2BFF7BB500C948B8 /* PointCalculatorView.swift in Sources */,
+				859E0A8E2C01253200032F70 /* class.swift in Sources */,
 				85EC8B942BFF989300D7153A /* ContentView.swift in Sources */,
 				85982D202BD97E91000D9BD2 /* SubjectAveragesView.swift in Sources */,
 				8597DACC2BE02BF100AB15E4 /* SemesterView.swift in Sources */,
+				859E0A8C2C01237A00032F70 /* RealmManager.swift in Sources */,
 				859E0A852C00CB3F00032F70 /* ScheduleView.swift in Sources */,
 				85F389732BAC8157004B8B44 /* SubjectView.swift in Sources */,
 				85C101B22B8A1A1C00460B30 /* KSALP_APPApp.swift in Sources */,
@@ -319,6 +350,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACH_O_TYPE = mh_execute;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "niklas.KSALP-APP";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -348,6 +380,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACH_O_TYPE = mh_execute;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "niklas.KSALP-APP";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -381,9 +414,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		859E0A862C0120D000032F70 /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+		859E0AA52C01369400032F70 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/realm/realm-cocoa";
+			repositoryURL = "https://github.com/realm/realm-swift";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -392,14 +425,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		859E0A872C0120D000032F70 /* Realm */ = {
+		859E0AA82C01369400032F70 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 859E0A862C0120D000032F70 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
-			productName = Realm;
-		};
-		859E0A892C0120D000032F70 /* RealmSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 859E0A862C0120D000032F70 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 859E0AA52C01369400032F70 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */

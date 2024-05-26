@@ -1,78 +1,23 @@
-//
-//  SubjectAveragesView.swift
-//  KSALP_APP
-//
-//  Created by Niklas on 24.04.24.
-//
-
 import SwiftUI
+import RealmSwift
 
 struct SubjectAveragesView: View {
-    @ObservedObject var semester: Semester
-    @State private var showingAddSubjectSheet = false // State für das Sheet
-    @State private var newSubjectName = "" // State für den Namen des neuen Fachs
-    @State private var isMaturarelevant = false // State für den Maturarelevanz-Toggle
-    
-    var overallAverage: Double { // Berechnet den gewichteten Durchschnitt aller Fächer mit Noten in einem Semester
-        let subjectsWithGrades = semester.subjects.filter { !$0.grades.isEmpty }
-        let weightedAverages = subjectsWithGrades.map { $0.averageGrade }
-        let sum = weightedAverages.reduce(0, +)
-        return !weightedAverages.isEmpty ? sum / Double(weightedAverages.count) : 0
-    }
-    
-    var overallAverageText: String { // Gibt den Gesamtdurchschnitt als Text zurück
-        return overallAverage == 0 && semester.subjects.allSatisfy { $0.grades.isEmpty } ? "-" : String(format: "%.2f", overallAverage)
-    }
-    
-    // Berechnung für Maturadurchschnitt
-    var maturaAverage: Double {
-        let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
-        let weightedAverages = maturaSubjects.map { $0.averageGrade }
-        let sum = weightedAverages.reduce(0, +)
-        return !weightedAverages.isEmpty ? sum / Double(weightedAverages.count) : 0
-    }
-    
-    // Textdarstellung für Maturadurchschnitt
-    var maturaAverageText: String {
-        return maturaAverage == 0 ? "-" : String(format: "%.2f", maturaAverage)
-    }
-    
-    // Rundungsfunktion auf die nächsten 0.5
-    func roundedToNearestHalf(_ value: Double) -> Double {
-        return (value * 2).rounded() / 2
-    }
-    
-    // Berechnung der Pluspunkte und Minuspunkte
-    var maturaPlusPoints: Double {
-        let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
-        let plusPoints = maturaSubjects.map { max(roundedToNearestHalf($0.averageGrade) - 4, 0) }
-        return plusPoints.reduce(0, +)
-    }
-    
-    var maturaMinusPoints: Double {
-        let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
-        let minusPoints = maturaSubjects.map { max(4 - roundedToNearestHalf($0.averageGrade), 0) }
-        return minusPoints.reduce(0, +)
-    }
-    
-    // Textdarstellung für Plus- und Minuspunkte
-    var maturaPlusPointsText: String {
-        return maturaAverage == 0 ? "-" : String(format: "+%.1f", maturaPlusPoints)
-    }
-    
-    var maturaMinusPointsText: String {
-        return maturaAverage == 0 ? "-" : String(format: "-%.1f", maturaMinusPoints)
-    }
+    @ObservedRealmObject var semester: Semester
+    @State private var showingAddSubjectSheet = false
+    @State private var newSubjectName = ""
+    @State private var isMaturarelevant = false
+    private let realmManager = RealmManager()
+
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 4) { // Reduziert den Abstand zwischen den Elementen weiter
+                VStack(spacing: 4) {
                     HStack {
                         VStack(alignment: .leading) {
-                            Text("Gesamtschnitt ") // Text für Gesamtdurchschnitt
+                            Text("Gesamtschnitt ")
                                 .font(.headline)
                                 .foregroundColor(.black)
-                            Text(overallAverageText) // Anzeige des Gesamtdurchschnitts
+                            Text(overallAverageText)
                                 .font(.largeTitle)
                                 .bold()
                                 .foregroundColor(.black)
@@ -82,22 +27,22 @@ struct SubjectAveragesView: View {
                         .frame(maxWidth: .infinity)
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
-                        
+
                         VStack(alignment: .leading) {
-                            Text("Maturadurchschnitt") // Text für Maturadurchschnitt
+                            Text("Maturadurchschnitt")
                                 .font(.headline)
                                 .foregroundColor(.black)
-                            Text(maturaAverageText) // Anzeige des Maturadurchschnitts
+                            Text(maturaAverageText)
                                 .font(.largeTitle)
                                 .bold()
                                 .foregroundColor(.black)
-                            Spacer() // Füllt den verfügbaren Platz, um die Durchschnittszahl auf die gleiche Höhe zu bringen
+                            Spacer()
                             HStack {
                                 VStack(alignment: .leading) {
-                                    Text("Pluspunkte:") // Überschrift für Pluspunkte
+                                    Text("Pluspunkte:")
                                         .font(.caption)
                                         .foregroundColor(.green)
-                                    Text("\(maturaPlusPointsText)") // Anzeige der Pluspunkte ohne Vorzeichen
+                                    Text("\(maturaPlusPointsText)")
                                         .font(.caption)
                                         .foregroundColor(.green)
                                 }
@@ -105,7 +50,7 @@ struct SubjectAveragesView: View {
                                     Text("Minuspunkte:")
                                         .font(.caption)
                                         .foregroundColor(.red)
-                                    Text("\(maturaMinusPointsText)") // Anzeige der Minuspunkte ohne Vorzeichen
+                                    Text("\(maturaMinusPointsText)")
                                         .font(.caption)
                                         .foregroundColor(.red)
                                 }
@@ -116,10 +61,9 @@ struct SubjectAveragesView: View {
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                     }
-                    .frame(height: 130) // Grösse Durchschnittsanzeigen
+                    .frame(height: 130)
 
-                    
-                    Text("Fächer") // Überschrift für die Fächerliste
+                    Text("Fächer")
                         .font(.title)
                         .bold()
                         .padding(.top, 4)
@@ -130,46 +74,46 @@ struct SubjectAveragesView: View {
                         .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
 
                     VStack(spacing: 0) {
-                        ForEach($semester.subjects, id: \.id) { $subject in // Die Verwendung von .id gewährleistet eine eindeutige Identifikation der Listenelemente
-                            NavigationLink(destination: SubjectView(subject: $subject, semester: semester)) { // Übergeben des semester-Objekts
+                        ForEach(semester.subjects) { subject in
+                            NavigationLink(destination: SubjectView(subject: subject, semester: semester)) {
                                 HStack {
                                     VStack(alignment: .leading) {
-                                        Text(subject.name) // Anzeige des Namens des Faches
-                                            .foregroundColor(.black) // Setzt die Schriftfarbe auf schwarz
-                                            .lineLimit(1) // Begrenzung auf eine Zeile
-                                            .truncationMode(.tail) // Text abschneiden mit "..."
-                                            .frame(maxWidth: .infinity, alignment: .leading) // Maximale Breite auf die verfügbare Breite begrenzen
+                                        Text(subject.name)
+                                            .foregroundColor(.black)
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
                                         if subject.isMaturarelevant {
-                                            Text("Matura") // Anzeige des Textes "Matura" wenn das Fach maturarelevant ist
+                                            Text("Matura")
                                                 .font(.caption)
                                                 .foregroundColor(.gray)
                                         } else {
-                                            Text("") // Platzhalter um die Höhe konsistent zu halten
+                                            Text("")
                                                 .font(.caption)
                                                 .foregroundColor(.clear)
                                         }
                                     }
                                     Spacer()
-                                    Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade)) // Anzeige des Durchschnitts des Faches auf zwei Dezimalstellen oder "-" wenn keine Noten vorhanden sind
-                                        .foregroundColor(.black) // Setzt die Schriftfarbe auf schwarz
+                                    Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade))
+                                        .foregroundColor(.black)
                                 }
                                 .padding(.vertical, 8)
                                 .padding(.horizontal, 12)
-                                .frame(maxWidth: .infinity, minHeight: 50) // Setzt die maximale Breite und eine Mindesthöhe
+                                .frame(maxWidth: .infinity, minHeight: 50)
                                 .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
                                 .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
-                                .padding([.leading, .trailing], 4) // Fügt Paddings links und rechts hinzu
+                                .padding([.leading, .trailing], 4)
                             }
-                            .listRowInsets(EdgeInsets()) // Entfernt die Standardeinrückungen
+                            .listRowInsets(EdgeInsets())
                         }
                     }
-                    .padding([.leading, .trailing], 8) // Fügt Paddings links und rechts zur gesamten Liste hinzu
+                    .padding([.leading, .trailing], 8)
                 }
                 .navigationTitle(semester.name)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Fach hinzufügen") {
-                            showingAddSubjectSheet = true // Sheet anzeigen
+                            showingAddSubjectSheet = true
                         }
                     }
                 }
@@ -178,31 +122,80 @@ struct SubjectAveragesView: View {
             .sheet(isPresented: $showingAddSubjectSheet) {
                 NavigationStack {
                     Form {
-                        TextField("Fachname", text: $newSubjectName) // Eingabefeld für den Namen des neuen Faches
-                        Toggle("Maturarelevant", isOn: $isMaturarelevant) // Schalter für Maturarelevanz
+                        TextField("Fachname", text: $newSubjectName)
+                        Toggle("Maturarelevant", isOn: $isMaturarelevant)
                     }
                     .navigationTitle("Neues Fach")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button("Abbrechen") {
-                                showingAddSubjectSheet = false // Sheet schliessen wenn abbrechen getippt wird
-                                newSubjectName = "" // Reset Fachname
-                                isMaturarelevant = false // Reset Maturarelevanz
+                                showingAddSubjectSheet = false
+                                newSubjectName = ""
+                                isMaturarelevant = false
                             }
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Hinzufügen") {
-                                let newSubject = Subject(name: newSubjectName, isMaturarelevant: isMaturarelevant)
-                                semester.subjects.append(newSubject) // Fügt das neue Fach der Liste hinzu
-                                showingAddSubjectSheet = false // Sheet schliessen wenn hinzufügen getippt wird
-                                newSubjectName = "" // Reset Fachname
-                                isMaturarelevant = false // Reset Maturarelevanz
+                                addNewSubject()
                             }
-                            .disabled(newSubjectName.isEmpty) // Deaktiviert den Button wenn kein Name eingegeben wurde
+                            .disabled(newSubjectName.isEmpty)
                         }
                     }
                 }
             }
         }
+    }
+
+    private func addNewSubject() {
+        realmManager.addSubject(to: semester.id, name: newSubjectName, isMaturarelevant: isMaturarelevant)
+        showingAddSubjectSheet = false
+        newSubjectName = ""
+        isMaturarelevant = false
+    }
+
+    var overallAverage: Double {
+        let subjectsWithGrades = semester.subjects.filter { !$0.grades.isEmpty }
+        let weightedAverages = subjectsWithGrades.map { $0.averageGrade }
+        let sum = weightedAverages.reduce(0, +)
+        return !weightedAverages.isEmpty ? sum / Double(weightedAverages.count) : 0
+    }
+
+    var overallAverageText: String {
+        return overallAverage == 0 && semester.subjects.allSatisfy { $0.grades.isEmpty } ? "-" : String(format: "%.2f", overallAverage)
+    }
+
+    var maturaAverage: Double {
+        let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
+        let weightedAverages = maturaSubjects.map { $0.averageGrade }
+        let sum = weightedAverages.reduce(0, +)
+        return !weightedAverages.isEmpty ? sum / Double(weightedAverages.count) : 0
+    }
+
+    var maturaAverageText: String {
+        return maturaAverage == 0 ? "-" : String(format: "%.2f", maturaAverage)
+    }
+
+    func roundedToNearestHalf(_ value: Double) -> Double {
+        return (value * 2).rounded() / 2
+    }
+
+    var maturaPlusPoints: Double {
+        let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
+        let plusPoints = maturaSubjects.map { max(roundedToNearestHalf($0.averageGrade) - 4, 0) }
+        return plusPoints.reduce(0, +)
+    }
+
+    var maturaMinusPoints: Double {
+        let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
+        let minusPoints = maturaSubjects.map { max(4 - roundedToNearestHalf($0.averageGrade), 0) }
+        return minusPoints.reduce(0, +)
+    }
+
+    var maturaPlusPointsText: String {
+        return maturaAverage == 0 ? "-" : String(format: "+%.1f", maturaPlusPoints)
+    }
+
+    var maturaMinusPointsText: String {
+        return maturaAverage == 0 ? "-" : String(format: "-%.1f", maturaMinusPoints)
     }
 }

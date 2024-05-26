@@ -1,11 +1,5 @@
-//
-//  ContentView.swift
-//  KSALP_APP
-//
-//  Created by Niklas on 23.05.24.
-//
 
-// ContentView.swift
+
 import SwiftUI
 
 struct ContentView: View {
@@ -15,11 +9,12 @@ struct ContentView: View {
                 .tabItem {
                     Label("Semester", systemImage: "list.bullet")
                 }
-            
+
             PointCalculatorView()
                 .tabItem {
                     Label("PunktRechner", systemImage: "list.bullet")
                 }
+
             ScheduleView()
                 .tabItem{
                     Label("Stundenplan", systemImage: "list.bullet")
@@ -33,4 +28,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
 

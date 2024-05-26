@@ -1,58 +1,33 @@
 import SwiftUI
-
-struct Grade: Identifiable {
-    let id = UUID()
-    var name: String
-    var score: Double
-    var weight: Double
-    var date: Date
-    var isFinalExam: Bool
-}
-struct Subject: Identifiable {
-    let id = UUID() // Eindeutiger Identifier für jedes Fach
-    var name: String
-    var grades: [Grade] = []
-    var isMaturarelevant: Bool
-    
-    var averageGrade: Double {
-        let totalWeight = grades.reduce(0) { $0 + $1.weight }
-        let totalScore = grades.reduce(0) { $0 + ($1.score * $1.weight) }
-        return totalWeight == 0 ? 0 : totalScore / totalWeight
-    }
-    
-    var roundedAverageGrade: Double {
-        let average = averageGrade
-        let rounded = (average * 2).rounded() / 2
-        return rounded
-    }
-}
+import RealmSwift
 
 struct SubjectView: View {
-    @Binding var subject: Subject // Verwende Binding um änderungen zurückzuspiegeln und synchron zu halten
-    @ObservedObject var semester: Semester // Hinzugefügt, um die Liste der Faecher zu aktualisieren für das Fachloeschen
-    
-    @State private var showActionSheet: Bool = false // Steuert die Anzeige des ActionSheets (Titel)
-    @State private var showingAddGradeSheet: Bool = false // Steuert die Anzeige des Sheets für das Hinzufuegen neuer Noten (Prüfung)
-    @State private var showingEditSubjectSheet: Bool = false // Steuert die Anzeige des Sheets für das Bearbeiten des Fachnamens
-    @State private var editingSubjectName: String = "" // Hilfsvariable für das Bearbeiten des Fachnamens
-    @State private var editingIsMaturarelevant: Bool = false // Hilfsvariable für das Bearbeiten der Maturarelevanz
-    @State private var showAdditionalOptions: Bool = false // Steuert die Anzeige der zusätzlichen Optionen
-    @State private var showingAddFinalExamSheet: Bool = false // Steuert die Anzeige des Sheets für das Hinzufuegen einer Abschlussprüfung
-    @State private var showingCalculatorSheet: Bool = false // Steuert die Anzeige des Wunschnotenrechners
-    @State private var newName: String = "Neue Note" // Eingabefeld für den Namen der neuen Note
-    @State private var newScore: String = "" // Eingabefeld für die Punktzahl der neuen Note
-    @State private var newWeight: String = "1.0" // Eingabefeld für die Gewichtung der neuen Note
-    @State private var newDate: Date = Date() // Standard - heutiges Datum
-    @State private var finalExamName: String = "Abschlusspruefung" // Eingabefeld fuer den Namen der Abschlussprüfung
-    @State private var finalExamScore: String = "" // Eingabefeld für die Punktzahl der Abschlussprüfung
-    @State private var finalExamDate: Date = Date() // Standard - heutiges Datum
-    @State private var desiredGrade: String = "" // Eingabefeld fuer den gewünschten Durchschnitt
-    @State private var desiredWeight: String = "1.0" // Eingabefeld fuer die Gewichtung der gewünschten Note
-    @State private var requiredScore: String = "" // Ausgabe der benötigten Note
-    @Environment(\.presentationMode) var presentationMode // Um die View zu schliessen für das Fachlöschen
-    @State private var selectedGrade: Grade?
+    @ObservedRealmObject var subject: Subject
+    @ObservedRealmObject var semester: Semester
 
-    
+    @State private var showActionSheet: Bool = false
+    @State private var showingAddGradeSheet: Bool = false
+    @State private var showingEditSubjectSheet: Bool = false
+    @State private var editingSubjectName: String = ""
+    @State private var editingIsMaturarelevant: Bool = false
+    @State private var showAdditionalOptions: Bool = false
+    @State private var showingAddFinalExamSheet: Bool = false
+    @State private var showingCalculatorSheet: Bool = false
+    @State private var newName: String = "Neue Note"
+    @State private var newScore: String = ""
+    @State private var newWeight: String = "1.0"
+    @State private var newDate: Date = Date()
+    @State private var finalExamName: String = "Abschlusspruefung"
+    @State private var finalExamScore: String = ""
+    @State private var finalExamDate: Date = Date()
+    @State private var desiredGrade: String = ""
+    @State private var desiredWeight: String = "1.0"
+    @State private var requiredScore: String = ""
+    @Environment(\.presentationMode) var presentationMode
+    @State private var selectedGrade: Grade?
+    @State private var tempGrade: Grade?
+    private let realmManager = RealmManager()
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -80,22 +55,24 @@ struct SubjectView: View {
                     calculatorSheet
                 }
                 .sheet(item: $selectedGrade) { grade in
-                    GradeDetailView(grade: Binding(
-                        get: { grade },
-                        set: { updatedGrade in
-                            if let index = subject.grades.firstIndex(where: { $0.id == updatedGrade.id }) {
-                                subject.grades[index] = updatedGrade
+                    GradeDetailView(
+                        grade: Binding(
+                            get: { grade },
+                            set: { newValue in
+                                if let index = subject.grades.firstIndex(where: { $0.id == grade.id }) {
+                                    subject.grades[index] = newValue
+                                }
                             }
-                        }
-                    ))
+                        )
+                    )
                 }
+
 
             }
             .preferredColorScheme(.light)
             additionalOptionsView
         }
     }
-    
     // Ansicht für Durchschnitt und gerundeten Durchschnitt
     private var averageAndRoundedGradeView: some View {
         HStack {
@@ -121,7 +98,7 @@ struct SubjectView: View {
         }
         .padding(.horizontal)
     }
-    
+
     private var gradesListView: some View {
         VStack(spacing: 8) {
             ForEach(subject.grades.indices, id: \.self) { index in
@@ -183,8 +160,6 @@ struct SubjectView: View {
         return formatter.string(from: date)
     }
 
-    
-    // Ansicht für den Titel und die Aktionen
     private var titleView: some View {
         Button(action: {
             self.showActionSheet = true
@@ -206,15 +181,14 @@ struct SubjectView: View {
                     self.showingEditSubjectSheet = true
                 },
                 .destructive(Text("Fach loeschen")) {
-                    self.semester.subjects.removeAll { $0.id == self.subject.id }
+                    realmManager.deleteSubject(subjectID: subject.id)
                     self.presentationMode.wrappedValue.dismiss()
                 },
                 .cancel()
             ])
         }
     }
-    
-    // Ansicht für zusätzliche Optionen
+
     private var additionalOptionsView: some View {
         VStack {
             Button(action: {
@@ -297,8 +271,7 @@ struct SubjectView: View {
         .shadow(radius: 10)
         .padding()
     }
-    
-    // Sheet für das Hinzufuegen einer neuen Note
+
     private var addGradeSheet: some View {
         NavigationView {
             Form {
@@ -347,8 +320,7 @@ struct SubjectView: View {
             )
         }
     }
-    
-    // Sheet für das Bearbeiten eines Fachs
+
     private var editSubjectSheet: some View {
         NavigationView {
             Form {
@@ -359,14 +331,16 @@ struct SubjectView: View {
             .navigationBarItems(leading: Button("Abbrechen") {
                 self.showingEditSubjectSheet = false
             }, trailing: Button("Fertig") {
-                self.subject.name = self.editingSubjectName
-                self.subject.isMaturarelevant = self.editingIsMaturarelevant
+                realmManager.updateSubject(
+                    subjectID: subject.id,
+                    newName: editingSubjectName,
+                    isMaturarelevant: editingIsMaturarelevant
+                )
                 self.showingEditSubjectSheet = false
             })
         }
     }
-    
-    // Sheet für das Hinzufügen einer Abschlussprüfung
+
     private var addFinalExamSheet: some View {
         NavigationView {
             Form {
@@ -392,8 +366,7 @@ struct SubjectView: View {
             )
         }
     }
-    
-    // Sheet für den Wunschnotenrechner
+
     private var calculatorSheet: some View {
         NavigationView {
             Form {
@@ -435,88 +408,55 @@ struct SubjectView: View {
             )
         }
     }
-    
-    // Hilfsfunktion zum Zuruecksetzen der Felder für das Hinzufügen einer Note
+
     private func resetAddGradeFields() {
         newName = "Neue Note"
         newScore = ""
         newWeight = "1.0"
         newDate = Date()
     }
-    
-    // Hilfsfunktion zum Hinzufügen einer neuen Note
+
     private func addNewGrade() {
         let scoreValue = Double(newScore) ?? 0
         let weightValue = Double(newWeight) ?? 1.0
-        let newGrade = Grade(name: newName, score: scoreValue, weight: weightValue, date: newDate, isFinalExam: false)
-        subject.grades.append(newGrade)
-        
-        updateFinalExamWeights()
+        realmManager.addGrade(to: subject.id, name: newName, score: scoreValue, weight: weightValue, date: newDate, isFinalExam: false)
+        realmManager.updateFinalExamWeights(for: subject.id)
     }
-    
-    // Hilfsfunktion zum Zurücksetzen der Felder für das Hinzufügen einer Abschlussprüfung
+
+    private func addNewFinalExam() {
+        let scoreValue = Double(finalExamScore) ?? 0
+        realmManager.addFinalExam(to: subject.id, name: finalExamName, score: scoreValue, date: finalExamDate)
+        realmManager.updateFinalExamWeights(for: subject.id)
+    }
+
     private func resetAddFinalExamFields() {
         finalExamName = "Abschlussprüfung"
         finalExamScore = ""
         finalExamDate = Date()
     }
-    
-    // Hilfsfunktion zum Hinzufügen einer neuen Abschlussprüfung
-    private func addNewFinalExam() {
-        let scoreValue = Double(finalExamScore) ?? 0
-        let nonFinalGrades = subject.grades.filter { !$0.isFinalExam }
-        let totalNonFinalExamWeight = nonFinalGrades.reduce(0) { $0 + $1.weight }
-        let finalExamGrades = subject.grades.filter { $0.isFinalExam }
-        let finalExamCount = finalExamGrades.count + 1
-        let totalFinalExamWeight = totalNonFinalExamWeight // Abschlussprüfungen machen die Hälfte des Gesamtgewichts aus
-        let individualFinalExamWeight = totalFinalExamWeight / Double(finalExamCount)
-        
-        // Aktualisiere die Gewichtung der bestehenden Abschlussprüfungen
-        for index in subject.grades.indices {
-            if subject.grades[index].isFinalExam {
-                subject.grades[index].weight = individualFinalExamWeight
-            }
-        }
-        
-        let newGrade = Grade(name: finalExamName, score: scoreValue, weight: individualFinalExamWeight, date: finalExamDate, isFinalExam: true)
-        subject.grades.append(newGrade)
-    }
-    
-    // Hilfsfunktion zum Zurücksetzen der Felder des Wunschnotenrechners
+
     private func resetCalculatorFields() {
         desiredGrade = ""
         desiredWeight = "1.0"
         requiredScore = ""
     }
-    
-    // Hilfsfunktion zur Berechnung der benoetigten Note
+
     private func calculateRequiredScore() {
         let desiredAverage = Double(desiredGrade) ?? 0
         let weight = Double(desiredWeight) ?? 1.0
         let totalCurrentWeight = subject.grades.reduce(0) { $0 + $1.weight }
         let totalCurrentScore = subject.grades.reduce(0) { $0 + ($1.score * $1.weight) }
-        
+
         let requiredScoreValue = (desiredAverage * (totalCurrentWeight + weight) - totalCurrentScore) / weight
         requiredScore = String(format: "%.2f", requiredScoreValue)
     }
-    
-    // Hilfsfunktion zur Aktualisierung der Gewichtungen der Abschlussprüfungen
+
     private func updateFinalExamWeights() {
-        let nonFinalGrades = subject.grades.filter { !$0.isFinalExam }
-        let totalNonFinalExamWeight = nonFinalGrades.reduce(0) { $0 + $1.weight }
-        let finalExamGrades = subject.grades.filter { $0.isFinalExam }
-        let totalFinalExamWeight = totalNonFinalExamWeight // Abschlusspruefungen machen die Haelfte des Gesamtgewichts aus
-        let individualFinalExamWeight = finalExamGrades.isEmpty ? 0 : totalFinalExamWeight / Double(finalExamGrades.count)
-        
-        for index in subject.grades.indices {
-            if subject.grades[index].isFinalExam {
-                subject.grades[index].weight = individualFinalExamWeight
-            }
-        }
+        realmManager.updateFinalExamWeights(for: subject.id)
     }
 }
 
-extension Double { // logik formatierungsstring für Gewichtung
+extension Double {
     func formattedAsInput() -> String {
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
