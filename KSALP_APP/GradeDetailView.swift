@@ -1,49 +1,74 @@
 import SwiftUI
+import RealmSwift
 
 struct GradeDetailView: View {
     @Binding var grade: Grade
     @Environment(\.presentationMode) var presentationMode
 
-    @State private var tempGrade: Grade
+    @State private var tempName: String
+    @State private var tempScore: String
+    @State private var tempWeight: String
+    @State private var tempDate: Date
 
     init(grade: Binding<Grade>) {
         self._grade = grade
-        self._tempGrade = State(initialValue: grade.wrappedValue)
+        self._tempName = State(initialValue: grade.wrappedValue.name)
+        self._tempScore = State(initialValue: "\(grade.wrappedValue.score)")
+        self._tempWeight = State(initialValue: "\(grade.wrappedValue.weight)")
+        self._tempDate = State(initialValue: grade.wrappedValue.date)
     }
 
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Details").font(.headline)) {
+                Section {
                     HStack {
                         Text("Titel:")
                         Spacer()
-                        TextField("Titel", text: $tempGrade.name)
+                        TextField("Titel", text: $tempName)
                             .multilineTextAlignment(.trailing)
                     }
+                }
+                .padding(.bottom, 20)
 
+                Section {
                     HStack {
                         Text("Datum der Prüfung:")
                         Spacer()
-                        DatePicker("", selection: $tempGrade.date, displayedComponents: .date)
+                        DatePicker("", selection: $tempDate, displayedComponents: .date)
                             .labelsHidden()
-                            .multilineTextAlignment(.trailing)
                     }
+                }
+                .padding(.bottom, 20)
 
+                Section {
                     HStack {
                         Text("Note:")
                         Spacer()
-                        TextField("Note", value: $tempGrade.score, formatter: NumberFormatter.decimalFormatter)
+                        TextField("Note", text: $tempScore)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                     }
-
+                    
                     HStack {
                         Text("Gewichtung:")
                         Spacer()
-                        TextField("Gewichtung", value: $tempGrade.weight, formatter: NumberFormatter.decimalFormatter)
+                        TextField("Gewichtung", text: $tempWeight)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                    }
+                }
+
+                Section {
+                    Button(action: {
+                        deleteGrade()
+                    }) {
+                        HStack {
+                            Spacer()
+                            Text("Prüfung löschen")
+                                .foregroundColor(.red)
+                            Spacer()
+                        }
                     }
                 }
             }
@@ -53,28 +78,40 @@ struct GradeDetailView: View {
                     presentationMode.wrappedValue.dismiss()
                 },
                 trailing: Button("Speichern") {
-                    grade = tempGrade
-                    let realmManager = RealmManager()
-                    realmManager.updateGrade(
-                        gradeID: grade.id,
-                        name: grade.name,
-                        score: grade.score,
-                        weight: grade.weight,
-                        date: grade.date
-                    )
-                    presentationMode.wrappedValue.dismiss()
+                    saveGradeDetails()
                 }
             )
         }
     }
-}
 
-extension NumberFormatter {
-    static let decimalFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 1
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }()
+    private func saveGradeDetails() {
+        do {
+            let realm = try Realm()
+            try realm.write {
+                if let gradeToUpdate = realm.object(ofType: Grade.self, forPrimaryKey: grade.id) {
+                    gradeToUpdate.name = tempName
+                    gradeToUpdate.score = Double(tempScore) ?? 0.0
+                    gradeToUpdate.weight = Double(tempWeight) ?? 1.0
+                    gradeToUpdate.date = tempDate
+                }
+            }
+            presentationMode.wrappedValue.dismiss()
+        } catch {
+            print("Fehler beim Speichern der Notendetails: \(error.localizedDescription)")
+        }
+    }
+
+    private func deleteGrade() {
+        do {
+            let realm = try Realm()
+            try realm.write {
+                if let gradeToDelete = realm.object(ofType: Grade.self, forPrimaryKey: grade.id) {
+                    realm.delete(gradeToDelete)
+                }
+            }
+            presentationMode.wrappedValue.dismiss()
+        } catch {
+            print("Fehler beim Löschen der Note: \(error.localizedDescription)")
+        }
+    }
 }

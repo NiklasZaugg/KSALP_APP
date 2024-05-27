@@ -174,13 +174,13 @@ struct SubjectView: View {
             }.foregroundColor(.black)
         }
         .actionSheet(isPresented: $showActionSheet) {
-            ActionSheet(title: Text("Aktion waehlen"), message: nil, buttons: [
+            ActionSheet(title: Text("Aktion wählen"), message: nil, buttons: [
                 .default(Text("Fach bearbeiten")) {
                     self.editingSubjectName = self.subject.name
                     self.editingIsMaturarelevant = self.subject.isMaturarelevant
                     self.showingEditSubjectSheet = true
                 },
-                .destructive(Text("Fach loeschen")) {
+                .destructive(Text("Fach löschen")) {
                     realmManager.deleteSubject(subjectID: subject.id)
                     self.presentationMode.wrappedValue.dismiss()
                 },
@@ -228,7 +228,7 @@ struct SubjectView: View {
                         self.showingAddFinalExamSheet = true
                     }) {
                         HStack {
-                            Text("Abschlussprüfung hinzufuegen")
+                            Text("Abschlussprüfung hinzufügen")
                             Spacer()
                             Image(systemName: "checkmark.square")
                         }
@@ -282,7 +282,7 @@ struct SubjectView: View {
                 
                 Section {
                     HStack {
-                        Text("Datum der Prüfung:")
+                        Text("Datum:")
                         Spacer()
                         DatePicker("", selection: $newDate, displayedComponents: .date)
                             .labelsHidden()
@@ -305,7 +305,7 @@ struct SubjectView: View {
                     }
                 }
             }
-            .navigationBarTitle("Neue Note hinzufügen", displayMode: .inline)
+            .navigationBarTitle("Neue Note", displayMode: .inline)
             .navigationBarItems(
                 leading: Button("Abbrechen") {
                     showingAddGradeSheet = false
@@ -345,13 +345,28 @@ struct SubjectView: View {
         NavigationView {
             Form {
                 Section {
-                    TextField("Abschlusspruefung", text: $finalExamName)
-                    TextField("Note", text: $finalExamScore)
-                        .keyboardType(.decimalPad)
+                    TextField("Abschlussprüfung", text: $finalExamName)
                 }
-                DatePicker("Datum der Pruefung", selection: $finalExamDate, displayedComponents: .date)
+                .padding(.bottom, 20)
+                
+                Section {
+                    HStack {
+                        Text("Datum:")
+                        Spacer()
+                        DatePicker("", selection: $finalExamDate, displayedComponents: .date)
+                            .labelsHidden()
+                    }
+                }
+                .padding(.bottom, 20)
+                
+                Section {
+                    HStack {
+                        TextField("Note", text: $finalExamScore)
+                            .keyboardType(.decimalPad)
+                    }
+                }
             }
-            .navigationBarTitle("Abschlussprüfung hinzufuegen", displayMode: .inline)
+            .navigationBarTitle("Neue Abschlussprüfung", displayMode: .inline)
             .navigationBarItems(
                 leading: Button("Abbrechen") {
                     showingAddFinalExamSheet = false
@@ -367,12 +382,13 @@ struct SubjectView: View {
         }
     }
 
+
     private var calculatorSheet: some View {
         NavigationView {
             Form {
                 Section(header: Text("Wunschnote eingeben")) {
                     HStack {
-                        TextField("Gewünschter Durchschnitt:", text: $desiredGrade)
+                        TextField("Gewünschter Durchschnitt", text: $desiredGrade)
                             .keyboardType(.decimalPad)
                     }
                 }
@@ -405,6 +421,7 @@ struct SubjectView: View {
                 trailing: Button("Berechnen") {
                     calculateRequiredScore()
                 }
+                .disabled(desiredGrade.isEmpty)
             )
         }
     }

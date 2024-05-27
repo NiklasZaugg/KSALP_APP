@@ -1,5 +1,5 @@
-import Foundation
 import RealmSwift
+import Foundation
 
 class RealmManager {
     private var realm: Realm
@@ -27,7 +27,7 @@ class RealmManager {
 
     func updateSemesterName(semesterID: String, newName: String) {
         do {
-            if let semester = realm.object(ofType: Semester.self, forPrimaryKey: semesterID)?.thaw() {
+            if let semester = realm.object(ofType: Semester.self, forPrimaryKey: semesterID) {
                 try realm.write {
                     semester.name = newName
                 }
@@ -39,7 +39,7 @@ class RealmManager {
 
     func removeSemester(semesterID: String) {
         do {
-            if let semester = realm.object(ofType: Semester.self, forPrimaryKey: semesterID)?.thaw() {
+            if let semester = realm.object(ofType: Semester.self, forPrimaryKey: semesterID) {
                 try realm.write {
                     realm.delete(semester)
                 }
@@ -67,7 +67,7 @@ class RealmManager {
     func addGrade(to subjectID: String, name: String, score: Double, weight: Double, date: Date, isFinalExam: Bool) {
         do {
             try realm.write {
-                if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID)?.thaw() {
+                if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID) {
                     let grade = Grade()
                     grade.name = name
                     grade.score = score
@@ -82,9 +82,21 @@ class RealmManager {
         }
     }
 
+    func updateGradeName(gradeID: String, newName: String) throws {
+        do {
+            if let grade = realm.object(ofType: Grade.self, forPrimaryKey: gradeID) {
+                try realm.write {
+                    grade.name = newName
+                }
+            }
+        } catch let error as NSError {
+            throw error
+        }
+    }
+
     func updateGrade(gradeID: String, name: String, score: Double, weight: Double, date: Date) {
         do {
-            if let grade = realm.object(ofType: Grade.self, forPrimaryKey: gradeID)?.thaw() {
+            if let grade = realm.object(ofType: Grade.self, forPrimaryKey: gradeID) {
                 try realm.write {
                     grade.name = name
                     grade.score = score
@@ -97,9 +109,24 @@ class RealmManager {
         }
     }
 
+    func updateGradeDetails(gradeID: String, newName: String, newScore: Double, newWeight: Double, newDate: Date) throws {
+        do {
+            if let grade = realm.object(ofType: Grade.self, forPrimaryKey: gradeID) {
+                try realm.write {
+                    grade.name = newName
+                    grade.score = newScore
+                    grade.weight = newWeight
+                    grade.date = newDate
+                }
+            }
+        } catch let error as NSError {
+            throw error
+        }
+    }
+
     func addFinalExam(to subjectID: String, name: String, score: Double, date: Date) {
         do {
-            if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID)?.thaw() {
+            if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID) {
                 let nonFinalGrades = subject.grades.filter { !$0.isFinalExam }
                 let totalNonFinalExamWeight = nonFinalGrades.reduce(0) { $0 + $1.weight }
                 let finalExamGrades = subject.grades.filter { $0.isFinalExam }
@@ -130,7 +157,7 @@ class RealmManager {
 
     func updateSubject(subjectID: String, newName: String, isMaturarelevant: Bool) {
         do {
-            if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID)?.thaw() {
+            if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID) {
                 try realm.write {
                     subject.name = newName
                     subject.isMaturarelevant = isMaturarelevant
@@ -143,7 +170,7 @@ class RealmManager {
 
     func deleteSubject(subjectID: String) {
         do {
-            if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID)?.thaw() {
+            if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID) {
                 try realm.write {
                     realm.delete(subject)
                 }
@@ -155,7 +182,7 @@ class RealmManager {
 
     func updateFinalExamWeights(for subjectID: String) {
         do {
-            if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID)?.thaw() {
+            if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID) {
                 let nonFinalGrades = subject.grades.filter { !$0.isFinalExam }
                 let totalNonFinalExamWeight = nonFinalGrades.reduce(0) { $0 + $1.weight }
                 let finalExamGrades = subject.grades.filter { $0.isFinalExam }

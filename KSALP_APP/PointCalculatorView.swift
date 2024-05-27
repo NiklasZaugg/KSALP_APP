@@ -9,20 +9,31 @@ struct PointCalculatorView: View {
 
     var body: some View {
         VStack {
-            ZStack {
+            ZStack(alignment: .topTrailing) {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color.white)
                     .shadow(radius: 5)
                     .frame(height: 150)
-
+                
                 VStack {
+                    Spacer()
                     Text("Note")
                         .font(.headline)
-
                     Text(calculatedGrade == nil ? "-" : String(format: "%.2f", calculatedGrade!))
                         .font(.system(size: 48, weight: .bold))
                         .padding()
+                    Spacer()
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Note in Mitte von Z_Stack
+
+                Button(action: {
+                    calculateGrade()
+                }) {
+                    Text("Berechnen")
+                        .foregroundColor(.blue)
+                        .padding()
+                }
+                .padding([.top, .trailing], 1)
             }
 
             Text("Formel: Note = (Punktzahl / Max Punktzahl) * 5 + 1")
@@ -33,17 +44,9 @@ struct PointCalculatorView: View {
                 Text("Maximalpunktzahl:")
                     .padding(.bottom, -10.0)
                 TextField("Max Punktzahl", text: $maxScore)
-                    .keyboardType(.decimalPad)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.default)
                     .focused($isMaxScoreFieldFocused)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
-                            Button("Fertig") {
-                                isMaxScoreFieldFocused = false
-                            }
-                        }
-                    }
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
 
                 Text("Erreichte Punktzahl:")
@@ -73,7 +76,6 @@ struct PointCalculatorView: View {
                         }
                     }
                 }
-
 
                 HStack(spacing: 10) {
                     Button(action: {

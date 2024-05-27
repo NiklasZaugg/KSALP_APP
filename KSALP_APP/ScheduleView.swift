@@ -97,9 +97,8 @@ struct TimetableView: View {
             Text("Stundenplan für \(className)")
                 .font(.largeTitle)
                 .padding()
-            Text("Montag: Mathe, Deutsch, Sport")
-            Text("Dienstag: Englisch, Kunst, Biologie")
-            Text("Mittwoch: Geschichte, Musik, Physik")
+            Text("Stundenplanbild")
+
             Spacer()
         }
         .padding()

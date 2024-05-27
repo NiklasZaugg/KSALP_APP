@@ -89,22 +89,19 @@ struct SemesterView: View {
                 }
             }
             .sheet(isPresented: $showingAddSemester) {
-                NavigationView {
-                    VStack(spacing: 20) {
-                        TextField("Neuer Semestername", text: $newSemesterName)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
+                NavigationStack {
+                    Form {
+                        TextField("Semestername", text: $newSemesterName)
                     }
-                    .padding()
-                    .navigationTitle("Semester hinzufügen")
+                    .navigationTitle("Neues Semester")
                     .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
+                        ToolbarItem(placement: .cancellationAction) {
                             Button("Abbrechen") {
                                 showingAddSemester = false
                                 newSemesterName = ""
                             }
                         }
-                        ToolbarItem(placement: .navigationBarTrailing) {
+                        ToolbarItem(placement: .confirmationAction) {
                             Button("Fertig") {
                                 if !newSemesterName.isEmpty {
                                     addSemester(name: newSemesterName)
@@ -117,6 +114,7 @@ struct SemesterView: View {
                     }
                 }
             }
+
             .sheet(item: $selectedSemester) { semester in
                 NavigationView {
                     VStack(spacing: 20) {
