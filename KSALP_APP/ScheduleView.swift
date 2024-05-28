@@ -24,7 +24,7 @@ struct ScheduleView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(sortedClasses, id: \.self) { className in
-                            FavoriteClassButton(className: className, isFavorite: favoriteClasses.contains(className)) {
+                            FavoriteClassButton(className: className, isFavorite: favoriteClasses.contains(className), isSelected: className == selectedClass) {
                                 toggleFavorite(className: className)
                             } onSelect: {
                                 selectedClass = className
@@ -61,31 +61,37 @@ struct ScheduleView: View {
 struct FavoriteClassButton: View {
     let className: String
     let isFavorite: Bool
+    let isSelected: Bool
     var onFavoriteToggle: () -> Void
     var onSelect: () -> Void
 
     var body: some View {
-        HStack {
-            Button(action: {
-                onSelect()
-            }) {
+        Button(action: {
+            onSelect()
+        }) {
+            HStack {
                 Text(className)
                     .padding(.leading, 10)
                     .padding(.vertical, 10)
+                    .foregroundColor(isSelected ? .white : .black)
+                Spacer()
+                Button(action: {
+                    onFavoriteToggle()
+                }) {
+                    Image(systemName: isFavorite ? "star.fill" : "star")
+                        .foregroundColor(isFavorite ? .yellow : .gray)
+                        .padding(.trailing, 10)
+                }
             }
-            Spacer()
-            Button(action: {
-                onFavoriteToggle()
-            }) {
-                Image(systemName: isFavorite ? "star.fill" : "star")
-                    .foregroundColor(isFavorite ? .yellow : .gray)
-                    .padding(.trailing, 10)
-            }
+            .padding(5)
+            .background(isSelected ? Color.blue : Color.clear)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.blue, lineWidth: 2)
+            )
+            .cornerRadius(20)
         }
-        .padding()
-        .background(Color.blue)
-        .foregroundColor(.white)
-        .cornerRadius(8)
+        .buttonStyle(PlainButtonStyle())
     }
 }
 

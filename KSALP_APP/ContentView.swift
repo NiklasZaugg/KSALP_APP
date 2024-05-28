@@ -12,12 +12,12 @@ struct ContentView: View {
 
             PointCalculatorView()
                 .tabItem {
-                    Label("PunktRechner", systemImage: "list.bullet")
+                    Label("PunktRechner", systemImage: "rectangle.and.pencil.and.ellipsis")
                 }
 
             ScheduleView()
-                .tabItem{
-                    Label("Stundenplan", systemImage: "list.bullet")
+                .tabItem {
+                    Label("Stundenplan", systemImage: "calendar.badge.clock")
                 }
         }
     }

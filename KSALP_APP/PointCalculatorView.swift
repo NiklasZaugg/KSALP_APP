@@ -148,7 +148,7 @@ struct PointCalculatorView: View {
                             .cornerRadius(10)
                     }
                 }
-                .padding(.top, 20)
+                .padding(.bottom)
             }
             .padding(.horizontal)
             Spacer()

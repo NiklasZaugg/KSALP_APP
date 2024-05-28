@@ -17,7 +17,7 @@ struct SubjectView: View {
     @State private var newScore: String = ""
     @State private var newWeight: String = "1.0"
     @State private var newDate: Date = Date()
-    @State private var finalExamName: String = "Abschlusspruefung"
+    @State private var finalExamName: String = "Abschlussprüfung"
     @State private var finalExamScore: String = ""
     @State private var finalExamDate: Date = Date()
     @State private var desiredGrade: String = ""
@@ -184,7 +184,7 @@ struct SubjectView: View {
                     realmManager.deleteSubject(subjectID: subject.id)
                     self.presentationMode.wrappedValue.dismiss()
                 },
-                .cancel()
+                .cancel(Text("Abbrechen"))
             ])
         }
     }
@@ -251,7 +251,11 @@ struct SubjectView: View {
                         HStack {
                             Text("Wunschnotenrechner")
                             Spacer()
-                            Image(systemName: "calculator")
+                            Image("taschenrechner")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.blue)
                         }
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.2)))
