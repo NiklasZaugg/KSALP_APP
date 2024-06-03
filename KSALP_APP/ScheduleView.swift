@@ -1,4 +1,5 @@
 import SwiftUI
+import PDFKit
 
 struct ScheduleView: View {
     let classes = [
@@ -7,12 +8,12 @@ struct ScheduleView: View {
         "G23a", "G23b", "G23c", "G23d", "G23e", "G23f", "G23g", "G23h", "G23i", "G23k", "G23l", "G23m", "G23n",
         "T23a", "T23b",
         "G22a", "G22b", "G22c", "G22d", "G22e", "G22f", "G22g", "G22h", "G22i", "G22k", "G22l", "G22m",
-        "T22a","T22b",
+        "T22a", "T22b",
         "G21a", "G21b", "G21c", "G21d", "G21e", "G21f", "G21g", "G21h", "G21i", "G21k", "G21l", "G21m", "G21n",
-        "T21a","T21b",
+        "T21a", "T21b",
         "G20a", "G20b", "G20c", "G20d", "G20e", "G20f", "G20g", "G20h", "G20i", "G20k", "G20l",
-        "T20a","T20b",
-        "T19a","T19b"
+        "T20a", "T20b",
+        "T19a", "T19b"
     ]
     
     @State private var selectedClass: String? = nil
@@ -39,6 +40,7 @@ struct ScheduleView: View {
                 }
             }
             .navigationTitle("Stundenplan")
+            .background(Color.white.edgesIgnoringSafeArea(.all))
         }
     }
     
@@ -99,15 +101,38 @@ struct TimetableView: View {
     let className: String
     
     var body: some View {
-        VStack {
-            Text("Stundenplan für \(className)")
-                .font(.largeTitle)
-                .padding()
-            Text("Stundenplanbild")
+        PDFViewer(pdfName: "\(className).pdf")
+            .padding()
+            .background(Color.white)
+    }
+}
 
-            Spacer()
+struct PDFViewer: UIViewRepresentable {
+    let pdfName: String
+    let fixedScaleFactor: CGFloat = 0.55 // Adjust this value as needed for a fixed scale
+
+    func makeUIView(context: Context) -> PDFView {
+        let pdfView = PDFView()
+        pdfView.autoScales = false // Disable auto-scaling
+        pdfView.scaleFactor = fixedScaleFactor
+        pdfView.displayDirection = .vertical
+        pdfView.displayMode = .singlePageContinuous
+
+        if let path = Bundle.main.url(forResource: pdfName, withExtension: nil, subdirectory: "Klassen_23_24") {
+            if let document = PDFDocument(url: path) {
+                pdfView.document = document
+            }
         }
-        .padding()
+        return pdfView
+    }
+
+    func updateUIView(_ uiView: PDFView, context: Context) {
+        if let path = Bundle.main.url(forResource: pdfName, withExtension: nil, subdirectory: "Klassen_23_24") {
+            if let document = PDFDocument(url: path) {
+                uiView.document = document
+                uiView.scaleFactor = fixedScaleFactor // Ensure the fixed scale is applied
+            }
+        }
     }
 }
 

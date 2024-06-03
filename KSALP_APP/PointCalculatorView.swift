@@ -6,6 +6,7 @@ struct PointCalculatorView: View {
     @State private var calculatedGrade: Double? = nil
     @State private var currentScore: String = ""
     @FocusState private var isMaxScoreFieldFocused: Bool
+    @State private var isCurrentScoreCalculated: Bool = false
 
     var body: some View {
         VStack {
@@ -13,8 +14,7 @@ struct PointCalculatorView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color.white)
                     .shadow(radius: 5)
-                    .frame(height: 150)
-                
+
                 VStack {
                     Spacer()
                     Text("Note")
@@ -23,28 +23,31 @@ struct PointCalculatorView: View {
                         .font(.system(size: 48, weight: .bold))
                         .padding()
                     Spacer()
+                    Text("Formel: Note = (Punktzahl / Max Punktzahl) * 5 + 1")
+                        .font(.caption)
+                        .padding(.vertical, 5.0)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Note in Mitte von Z_Stack
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
 
                 Button(action: {
                     calculateGrade()
                 }) {
                     Text("Berechnen")
-                        .foregroundColor(.blue)
+                        .foregroundColor(canCalculateGrade ? .blue : .gray)
                         .padding()
                 }
                 .padding([.top, .trailing], 1)
+                .disabled(!canCalculateGrade)
             }
-
-            Text("Formel: Note = (Punktzahl / Max Punktzahl) * 5 + 1")
-                .font(.caption)
-                .padding(.bottom)
+            
+            Spacer()
 
             VStack(spacing: 16) {
                 Text("Maximalpunktzahl:")
                     .padding(.bottom, -10.0)
                 TextField("Max Punktzahl", text: $maxScore)
-                    .keyboardType(.default)
+                    .keyboardType(.numbersAndPunctuation)
                     .focused($isMaxScoreFieldFocused)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
@@ -69,7 +72,7 @@ struct PointCalculatorView: View {
                                 Text("\(number)")
                                     .font(.largeTitle)
                                     .frame(maxWidth: .infinity, maxHeight: 70)
-                                    .background(Color(.systemTeal))
+                                    .background(Color.blue.opacity(0.7))
                                     .foregroundColor(.white)
                                     .cornerRadius(10)
                             }
@@ -85,7 +88,7 @@ struct PointCalculatorView: View {
                         Text("0")
                             .font(.largeTitle)
                             .frame(maxWidth: .infinity, maxHeight: 70)
-                            .background(Color(.systemTeal))
+                            .background(Color.blue.opacity(0.7))
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
@@ -99,7 +102,7 @@ struct PointCalculatorView: View {
                         Text(".")
                             .font(.largeTitle)
                             .frame(maxWidth: .infinity, maxHeight: 70)
-                            .background(Color(.systemTeal))
+                            .background(Color.blue.opacity(0.7))
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
@@ -110,8 +113,12 @@ struct PointCalculatorView: View {
                     Button(action: {
                         if !self.currentScore.isEmpty {
                             self.currentScore.removeLast()
-                            if !self.currentScore.hasSuffix("+") {
+                            if self.currentScore.isEmpty {
                                 self.inputScore = ""
+                            } else if self.currentScore.hasSuffix("+") {
+                                self.inputScore = ""
+                            } else if let lastChar = self.currentScore.last, lastChar.isNumber {
+                                self.inputScore = String(lastChar)
                             }
                         }
                     }) {
@@ -124,7 +131,7 @@ struct PointCalculatorView: View {
                     }
 
                     Button(action: {
-                        if !self.currentScore.hasSuffix("+") {
+                        if !self.currentScore.hasSuffix("+") && !self.currentScore.isEmpty && !self.inputScore.isEmpty {
                             self.currentScore += "+"
                             self.inputScore = ""
                         }
@@ -139,14 +146,16 @@ struct PointCalculatorView: View {
 
                     Button(action: {
                         self.calculateExpression()
+                        self.isCurrentScoreCalculated = true
                     }) {
                         Image(systemName: "arrow.right.circle")
                             .font(.title)
                             .frame(maxWidth: .infinity, maxHeight: 70)
-                            .background(Color(.systemBlue))
+                            .background(self.canCalculateExpression ? Color(.systemBlue) : Color.gray)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
+                    .disabled(!canCalculateExpression)
                 }
                 .padding(.bottom)
             }
@@ -157,10 +166,27 @@ struct PointCalculatorView: View {
     }
 
     private var canCalculateGrade: Bool {
-        guard let _ = Double(maxScore), !currentScore.isEmpty, let _ = Double(currentScore) else {
+        guard let _ = Double(maxScore), isValidNumber(currentScore), isCurrentScoreCalculated else {
             return false
         }
         return true
+    }
+
+    private var canCalculateExpression: Bool {
+        guard isValidExpression(currentScore) else {
+            return false
+        }
+        return true
+    }
+
+    private func isValidNumber(_ number: String) -> Bool {
+        let numberPattern = #"^\d+(\.\d+)?$"#
+        return number.range(of: numberPattern, options: .regularExpression) != nil
+    }
+
+    private func isValidExpression(_ expression: String) -> Bool {
+        let expressionPattern = #"^\d+(\.\d+)?([+]\d+(\.\d+)?)*$"#
+        return expression.range(of: expressionPattern, options: .regularExpression) != nil
     }
 
     private func calculateExpression() {

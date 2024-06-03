@@ -116,22 +116,19 @@ struct SemesterView: View {
             }
 
             .sheet(item: $selectedSemester) { semester in
-                NavigationView {
-                    VStack(spacing: 20) {
+                NavigationStack {
+                    Form {
                         TextField("Semestername bearbeiten", text: $editedSemesterName)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
                     }
-                    .padding()
                     .navigationTitle("Semester bearbeiten")
                     .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
+                        ToolbarItem(placement: .cancellationAction) {
                             Button("Abbrechen") {
                                 self.isEditing = false
                                 selectedSemester = nil
                             }
                         }
-                        ToolbarItem(placement: .navigationBarTrailing) {
+                        ToolbarItem(placement: .confirmationAction) {
                             Button("Fertig") {
                                 if !editedSemesterName.isEmpty, let selectedSemester = selectedSemester {
                                     updateSemesterName(semester: selectedSemester, newName: editedSemesterName)
@@ -139,10 +136,12 @@ struct SemesterView: View {
                                 self.isEditing = false
                                 self.selectedSemester = nil
                             }
+                            .disabled(editedSemesterName.isEmpty)
                         }
                     }
                 }
             }
+
             .alert(isPresented: $showingDeleteConfirmation) {
                 Alert(
                     title: Text("Semester löschen"),
@@ -153,7 +152,7 @@ struct SemesterView: View {
                         }
                         showingDeleteConfirmation = false
                     },
-                    secondaryButton: .cancel {
+                    secondaryButton: .cancel(Text("Abbrechen")) {
                         showingDeleteConfirmation = false
                     }
                 )
