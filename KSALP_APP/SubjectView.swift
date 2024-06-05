@@ -23,6 +23,7 @@ struct SubjectView: View {
     @State private var desiredGrade: String = ""
     @State private var desiredWeight: String = "1.0"
     @State private var requiredScore: String = ""
+    @State private var showInfoAlert = false
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedGrade: Grade?
     @State private var tempGrade: Grade?
@@ -87,7 +88,22 @@ struct SubjectView: View {
             .frame(maxWidth: .infinity)
             
             VStack {
-                Text("Zeugnisnote")
+                HStack {
+                    Text("Zeugnisnote")
+                    Button(action: {
+                        showInfoAlert = true
+                    }) {
+                        Image(systemName: "info.circle")
+                            .foregroundColor(.blue)
+                    }
+                    .alert(isPresented: $showInfoAlert) {
+                        Alert(
+                            title: Text("Info"),
+                            message: Text("Die Zeugnisnote in maturarelevanten Fächern wird bei Viertelnoten zugunsten der Abschlussprüfungssumme gerundet."),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
+                }
                 let roundedText = subject.grades.isEmpty ? "-" : String(format: "%.1f", subject.roundedAverageGrade)
                 Text(roundedText)
             }

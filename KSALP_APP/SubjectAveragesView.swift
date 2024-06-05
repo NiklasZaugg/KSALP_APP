@@ -181,16 +181,16 @@ struct SubjectAveragesView: View {
 
     var maturaPlusPoints: Double {
         let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
-        let plusPoints = maturaSubjects.map { max(roundedToNearestHalf($0.averageGrade) - 4, 0) }
+        let plusPoints = maturaSubjects.map { max(roundedToNearestHalf($0.roundedAverageGrade) - 4, 0) }
         return plusPoints.reduce(0, +)
     }
 
     var maturaMinusPoints: Double {
         let maturaSubjects = semester.subjects.filter { $0.isMaturarelevant && !$0.grades.isEmpty }
-        let minusPoints = maturaSubjects.map { max(4 - roundedToNearestHalf($0.averageGrade), 0) }
+        let minusPoints = maturaSubjects.map { max(4 - roundedToNearestHalf($0.roundedAverageGrade), 0) }
         return minusPoints.reduce(0, +)
     }
-
+    
     var maturaPlusPointsText: String {
         return maturaAverage == 0 ? "-" : String(format: "+%.1f", maturaPlusPoints)
     }

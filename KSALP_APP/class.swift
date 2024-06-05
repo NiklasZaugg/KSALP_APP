@@ -1,5 +1,3 @@
-
-
 import RealmSwift
 import Foundation
 
@@ -34,7 +32,17 @@ class Subject: Object, Identifiable {
 
     var roundedAverageGrade: Double {
         let average = averageGrade
-        let rounded = (average * 2).rounded() / 2
+        let adjustedAverage: Double
+
+        if isMaturarelevant, let finalExam = grades.first(where: { $0.isFinalExam }) {
+            let adjustedTotalWeight = grades.reduce(0) { $0 + $1.weight } + 0.01
+            let adjustedTotalScore = grades.reduce(0) { $0 + ($1.score * $1.weight) } + (finalExam.score * 0.01)
+            adjustedAverage = adjustedTotalWeight == 0 ? 0 : adjustedTotalScore / adjustedTotalWeight
+        } else {
+            adjustedAverage = average
+        }
+
+        let rounded = (adjustedAverage * 2).rounded() / 2
         return rounded
     }
 }
