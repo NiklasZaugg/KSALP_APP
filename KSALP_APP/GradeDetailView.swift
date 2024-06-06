@@ -65,7 +65,7 @@ struct GradeDetailView: View {
                     }) {
                         HStack {
                             Spacer()
-                            Text("Prüfung löschen")
+                            Text("Note Löschen")
                                 .foregroundColor(.red)
                             Spacer()
                         }
