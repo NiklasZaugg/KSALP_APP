@@ -201,4 +201,22 @@ class RealmManager {
             print("Fehler beim Aktualisieren der Abschlussprüfungsgewichtung: \(error.localizedDescription)")
         }
     }
+
+    func copySubject(subjectID: String, toSemesterID: String) {
+        do {
+            if let subject = realm.object(ofType: Subject.self, forPrimaryKey: subjectID),
+               let semester = realm.object(ofType: Semester.self, forPrimaryKey: toSemesterID) {
+                let newSubject = Subject()
+                newSubject.name = subject.name
+                newSubject.isMaturarelevant = subject.isMaturarelevant
+                newSubject.grades.append(objectsIn: subject.grades)
+                
+                try realm.write {
+                    semester.subjects.append(newSubject)
+                }
+            }
+        } catch let error as NSError {
+            print("Fehler beim Kopieren des Fachs: \(error.localizedDescription)")
+        }
+    }
 }

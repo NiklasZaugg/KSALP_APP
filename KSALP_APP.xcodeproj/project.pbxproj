@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		854DEEB42C120CB400386402 /* CopySubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854DEEB32C120CB400386402 /* CopySubjectView.swift */; };
 		8550C15F2C062B4E00FAE856 /* Klassen_23_24 in Resources */ = {isa = PBXBuildFile; fileRef = 8550C15E2C062B4E00FAE856 /* Klassen_23_24 */; };
 		8594B9BA2BFF7BB500C948B8 /* PointCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */; };
 		8597DACC2BE02BF100AB15E4 /* SemesterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8597DACB2BE02BF100AB15E4 /* SemesterView.swift */; };
@@ -39,6 +40,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		854DEEB32C120CB400386402 /* CopySubjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopySubjectView.swift; sourceTree = "<group>"; };
 		8550C15E2C062B4E00FAE856 /* Klassen_23_24 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Klassen_23_24; path = ../../../../../Downloads/Klassen_23_24; sourceTree = "<group>"; };
 		8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCalculatorView.swift; sourceTree = "<group>"; };
 		8597DACB2BE02BF100AB15E4 /* SemesterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemesterView.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				8597DACB2BE02BF100AB15E4 /* SemesterView.swift */,
 				85EC8B932BFF989300D7153A /* ContentView.swift */,
 				85F389722BAC8157004B8B44 /* SubjectView.swift */,
+				854DEEB32C120CB400386402 /* CopySubjectView.swift */,
 				85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */,
 				859E0A8B2C01237A00032F70 /* RealmManager.swift */,
 				859E0A8D2C01253200032F70 /* class.swift */,
@@ -202,6 +205,7 @@
 				859AA35F2BD455AD0011E909 /* GradeDetailView.swift in Sources */,
 				8594B9BA2BFF7BB500C948B8 /* PointCalculatorView.swift in Sources */,
 				859E0A8E2C01253200032F70 /* class.swift in Sources */,
+				854DEEB42C120CB400386402 /* CopySubjectView.swift in Sources */,
 				85EC8B942BFF989300D7153A /* ContentView.swift in Sources */,
 				85982D202BD97E91000D9BD2 /* SubjectAveragesView.swift in Sources */,
 				8597DACC2BE02BF100AB15E4 /* SemesterView.swift in Sources */,

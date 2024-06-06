@@ -23,6 +23,7 @@ struct SubjectView: View {
     @State private var desiredGrade: String = ""
     @State private var desiredWeight: String = "1.0"
     @State private var requiredScore: String = ""
+    @State private var showingCopySubjectSheet: Bool = false
     @State private var showInfoAlert = false
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedGrade: Grade?
@@ -55,6 +56,9 @@ struct SubjectView: View {
                 .sheet(isPresented: $showingCalculatorSheet) {
                     calculatorSheet
                 }
+                .sheet(isPresented: $showingCopySubjectSheet) {
+                    CopySubjectSheet(subject: subject)
+                }
                 .sheet(item: $selectedGrade) { grade in
                     GradeDetailView(
                         grade: Binding(
@@ -76,20 +80,32 @@ struct SubjectView: View {
     }
     // Ansicht für Durchschnitt und gerundeten Durchschnitt
     private var averageAndRoundedGradeView: some View {
-        HStack {
-            VStack {
+        HStack(spacing: 20) {
+            VStack(spacing: 10) {
                 Text("Durchschnitt")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                
                 let averageText = subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade)
                 Text(averageText)
+                    .font(.title2)
+                    .foregroundColor(.secondary)
             }
-            .padding(.top)
             .padding()
-            .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray, lineWidth: 1)
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.1)))
+            )
+            .shadow(radius: 5)
             .frame(maxWidth: .infinity)
             
-            VStack {
+            VStack(spacing: 10) {
                 HStack {
                     Text("Zeugnisnote")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    
                     Button(action: {
                         showInfoAlert = true
                     }) {
@@ -104,15 +120,24 @@ struct SubjectView: View {
                         )
                     }
                 }
+                
                 let roundedText = subject.grades.isEmpty ? "-" : String(format: "%.1f", subject.roundedAverageGrade)
                 Text(roundedText)
+                    .font(.title2)
+                    .foregroundColor(.secondary)
             }
-            .padding(.top)
             .padding()
-            .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray, lineWidth: 1)
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.1)))
+            )
+            .shadow(radius: 5)
             .frame(maxWidth: .infinity)
         }
         .padding(.horizontal)
+
+
     }
 
     private var gradesListView: some View {
@@ -195,6 +220,9 @@ struct SubjectView: View {
                     self.editingSubjectName = self.subject.name
                     self.editingIsMaturarelevant = self.subject.isMaturarelevant
                     self.showingEditSubjectSheet = true
+                },
+                .default(Text("Fach kopieren")) { 
+                    self.showingCopySubjectSheet = true
                 },
                 .destructive(Text("Fach löschen")) {
                     realmManager.deleteSubject(subjectID: subject.id)
