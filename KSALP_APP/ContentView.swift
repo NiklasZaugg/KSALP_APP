@@ -19,6 +19,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Stundenplan", systemImage: "calendar.badge.clock")
                 }
+            Settings()
+                .tabItem {
+                    Label("Einstellungen", systemImage: "gearshape")
+                }
         }
     }
 }

@@ -132,7 +132,7 @@ class RealmManager {
                 let finalExamGrades = subject.grades.filter { $0.isFinalExam }
                 let finalExamCount = finalExamGrades.count + 1
                 let totalFinalExamWeight = totalNonFinalExamWeight
-                let individualFinalExamWeight = totalFinalExamWeight / Double(finalExamCount)
+                let individualFinalExamWeight = finalExamCount > 0 ? totalFinalExamWeight / Double(finalExamCount) : 0.0
                 
                 try realm.write {
                     for index in subject.grades.indices {
