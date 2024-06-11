@@ -486,7 +486,6 @@ struct SubjectView: View {
         let scoreValue = Double(newScore) ?? 0
         let weightValue = Double(newWeight) ?? 1.0
         realmManager.addGrade(to: subject.id, name: newName, score: scoreValue, weight: weightValue, date: newDate, isFinalExam: false)
-        realmManager.updateFinalExamWeights(for: subject.id)
     }
 
     private func addNewFinalExam() {
