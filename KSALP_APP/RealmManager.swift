@@ -219,4 +219,9 @@ class RealmManager {
             print("Fehler beim Kopieren des Fachs: \(error.localizedDescription)")
         }
     }
+    func deleteAllContents() {
+        try! realm.write {
+            realm.deleteAll()
+        }
+    }
 }

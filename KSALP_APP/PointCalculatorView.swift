@@ -214,17 +214,19 @@ struct PointCalculatorView: View {
 
 struct TabbedView: View {
     var body: some View {
-        TabView {
-            PointCalculatorView()
-                .tabItem {
-                    Image(systemName: "1.circle")
-                    Text("Calculator")
-                }
-            Text("Another View")
-                .tabItem {
-                    Image(systemName: "2.circle")
-                    Text("Another Tab")
-                }
+        NavigationView {
+            TabView {
+                PointCalculatorView()
+                    .tabItem {
+                        Image(systemName: "1.circle")
+                        Text("Calculator")
+                    }
+                Text("Another View")
+                    .tabItem {
+                        Image(systemName: "2.circle")
+                        Text("Another Tab")
+                    }
+            }
         }
     }
 }

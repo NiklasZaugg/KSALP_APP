@@ -185,8 +185,9 @@ struct SubjectView: View {
                     .cornerRadius(10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(subject.grades[index].isFinalExam ? Color.blue : Color.clear, lineWidth: 2)
+                            .stroke(subject.grades[index].isFinalExam ? Color.blue : Color.black, lineWidth: 1)
                     )
+
                     .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
                 }
             }
