@@ -109,11 +109,11 @@ struct TimetableView: View {
 
 struct PDFViewer: UIViewRepresentable {
     let pdfName: String
-    let fixedScaleFactor: CGFloat = 0.55 // Adjust this value as needed for a fixed scale
+    let fixedScaleFactor: CGFloat = 0.55
 
     func makeUIView(context: Context) -> PDFView {
         let pdfView = PDFView()
-        pdfView.autoScales = false // Disable auto-scaling
+        pdfView.autoScales = false
         pdfView.scaleFactor = fixedScaleFactor
         pdfView.displayDirection = .vertical
         pdfView.displayMode = .singlePageContinuous
@@ -130,7 +130,7 @@ struct PDFViewer: UIViewRepresentable {
         if let path = Bundle.main.url(forResource: pdfName, withExtension: nil, subdirectory: "Klassen_23_24") {
             if let document = PDFDocument(url: path) {
                 uiView.document = document
-                uiView.scaleFactor = fixedScaleFactor // Ensure the fixed scale is applied
+                uiView.scaleFactor = fixedScaleFactor 
             }
         }
     }
