@@ -17,7 +17,7 @@ struct ScheduleView: View {
     ]
     
     @State private var selectedClass: String? = nil
-    @State private var favoriteClasses: Set<String> = UserDefaults.standard.stringArray(forKey: "favoriteClasses")?.reduce(into: Set<String>()) { $0.insert($1) } ?? []
+    @State private var favoriteClasses: Set<String> = Set(UserDefaults.standard.stringArray(forKey: "favoriteClasses") ?? [])
 
     var body: some View {
         NavigationView {
@@ -45,9 +45,7 @@ struct ScheduleView: View {
     }
     
     private var sortedClasses: [String] {
-        let favoriteClassesArray = Array(favoriteClasses)
-        let nonFavoriteClasses = classes.filter { !favoriteClasses.contains($0) }
-        return favoriteClassesArray + nonFavoriteClasses
+        favoriteClasses.sorted() + classes.filter { !favoriteClasses.contains($0) }
     }
 
     private func toggleFavorite(className: String) {
@@ -68,18 +66,14 @@ struct FavoriteClassButton: View {
     var onSelect: () -> Void
 
     var body: some View {
-        Button(action: {
-            onSelect()
-        }) {
+        Button(action: onSelect) {
             HStack {
                 Text(className)
                     .padding(.leading, 10)
                     .padding(.vertical, 10)
                     .foregroundColor(isSelected ? .white : .black)
                 Spacer()
-                Button(action: {
-                    onFavoriteToggle()
-                }) {
+                Button(action: onFavoriteToggle) {
                     Image(systemName: isFavorite ? "star.fill" : "star")
                         .foregroundColor(isFavorite ? .yellow : .gray)
                         .padding(.trailing, 10)
@@ -87,10 +81,7 @@ struct FavoriteClassButton: View {
             }
             .padding(5)
             .background(isSelected ? Color.blue : Color.clear)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.blue, lineWidth: 2)
-            )
+            .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.blue, lineWidth: 2))
             .cornerRadius(20)
         }
         .buttonStyle(PlainButtonStyle())
@@ -119,19 +110,15 @@ struct PDFViewer: UIViewRepresentable {
         pdfView.displayMode = .singlePageContinuous
 
         if let path = Bundle.main.url(forResource: pdfName, withExtension: nil, subdirectory: "Klassen_23_24") {
-            if let document = PDFDocument(url: path) {
-                pdfView.document = document
-            }
+            pdfView.document = PDFDocument(url: path)
         }
         return pdfView
     }
 
     func updateUIView(_ uiView: PDFView, context: Context) {
         if let path = Bundle.main.url(forResource: pdfName, withExtension: nil, subdirectory: "Klassen_23_24") {
-            if let document = PDFDocument(url: path) {
-                uiView.document = document
-                uiView.scaleFactor = fixedScaleFactor 
-            }
+            uiView.document = PDFDocument(url: path)
+            uiView.scaleFactor = fixedScaleFactor
         }
     }
 }
