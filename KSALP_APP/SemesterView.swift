@@ -1,5 +1,3 @@
-
-
 import SwiftUI
 import RealmSwift
 
@@ -17,59 +15,72 @@ struct SemesterView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-                    ForEach(semesters) { semester in
-                        ZStack(alignment: .topLeading) {
-                            if isEditing {
-                                HStack {
-                                    Button(action: {
-                                        withAnimation {
-                                            semesterToDelete = semester
-                                            showingDeleteConfirmation = true
+                if semesters.isEmpty {
+                    VStack {
+                        Spacer()
+                        Text("Keine Semester vorhanden")
+                            .font(.title3)
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
+                            .padding(.top,200)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
+                        ForEach(semesters) { semester in
+                            ZStack(alignment: .topLeading) {
+                                if isEditing {
+                                    HStack {
+                                        Button(action: {
+                                            withAnimation {
+                                                semesterToDelete = semester
+                                                showingDeleteConfirmation = true
+                                            }
+                                        }) {
+                                            Image(systemName: "minus.circle.fill")
+                                                .resizable()
+                                                .frame(width: 30, height: 30)
+                                                .foregroundColor(.red)
+                                                .background(Color.white)
+                                                .clipShape(Circle())
+                                                .shadow(radius: 3)
+                                                .padding(5)
                                         }
-                                    }) {
-                                        Image(systemName: "minus.circle.fill")
-                                            .resizable()
-                                            .frame(width: 30, height: 30)
-                                            .foregroundColor(.red)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
-                                            .shadow(radius: 3)
-                                            .padding(5)
+                                        Button(action: {
+                                            self.selectedSemester = semester
+                                            self.editedSemesterName = semester.name
+                                        }) {
+                                            Image(systemName: "pencil.circle.fill")
+                                                .resizable()
+                                                .frame(width: 30, height: 30)
+                                                .foregroundColor(.blue)
+                                                .background(Color.white)
+                                                .clipShape(Circle())
+                                                .shadow(radius: 3)
+                                                .padding(5)
+                                        }
                                     }
-                                    Button(action: {
-                                        self.selectedSemester = semester
-                                        self.editedSemesterName = semester.name
-                                    }) {
-                                        Image(systemName: "pencil.circle.fill")
-                                            .resizable()
-                                            .frame(width: 30, height: 30)
-                                            .foregroundColor(.blue)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
-                                            .shadow(radius: 3)
-                                            .padding(5)
-                                    }
+                                    .offset(x: -10, y: -10)
+                                    .zIndex(1)
                                 }
-                                .offset(x: -10, y: -10)
-                                .zIndex(1)
+                                NavigationLink(destination: SubjectAveragesView(semester: semester)) {
+                                    Text(semester.name)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .frame(maxWidth: .infinity, minHeight: 100)
+                                        .lineLimit(2)
+                                        .truncationMode(.tail)
+                                        .background(Color.blue)
+                                        .cornerRadius(10)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .disabled(isEditing)
                             }
-                            NavigationLink(destination: SubjectAveragesView(semester: semester)) {
-                                Text(semester.name)
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .frame(maxWidth: .infinity, minHeight: 100)
-                                    .lineLimit(2)
-                                    .truncationMode(.tail)
-                                    .background(Color.blue)
-                                    .cornerRadius(10)
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            .disabled(isEditing)
                         }
                     }
+                    .padding()
                 }
-                .padding()
             }
             .navigationTitle("Semester Übersicht")
             .toolbar {
