@@ -98,7 +98,7 @@ struct SubjectAveragesView: View {
                         
                         Text("\(semester.subjects.count)")
                             .font(.headline)
-                            .foregroundColor(.gray)  
+                            .foregroundColor(.gray)
                             .padding(.top, 4)
                             .padding(.bottom, 4)
                             .padding(.trailing, 8)
@@ -107,43 +107,54 @@ struct SubjectAveragesView: View {
                     .background(Color.white)
                     .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
 
-
-
-                    VStack(spacing: 0) {
-                        ForEach(semester.subjects) { subject in
-                            NavigationLink(destination: SubjectView(subject: subject, semester: semester)) {
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(subject.name)
-                                            .foregroundColor(.black)
-                                            .lineLimit(1)
-                                            .truncationMode(.tail)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        if subject.isMaturarelevant {
-                                            Text("Matura")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                        } else {
-                                            Text("")
-                                                .font(.caption)
-                                                .foregroundColor(.clear)
-                                        }
-                                    }
-                                    Spacer()
-                                    Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade))
-                                        .foregroundColor(.black)
-                                }
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 12)
-                                .frame(maxWidth: .infinity, minHeight: 50)
-                                .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
-                                .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
-                                .padding([.leading, .trailing], 4)
-                            }
-                            .listRowInsets(EdgeInsets())
+                    if semester.subjects.isEmpty {
+                        VStack {
+                            Spacer()
+                            Text("Keine Fächer vorhanden")
+                                .font(.title3)
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+                                .padding(.top,150)
+                            Spacer()
                         }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        VStack(spacing: 0) {
+                            ForEach(semester.subjects) { subject in
+                                NavigationLink(destination: SubjectView(subject: subject, semester: semester)) {
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(subject.name)
+                                                .foregroundColor(.black)
+                                                .lineLimit(1)
+                                                .truncationMode(.tail)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            if subject.isMaturarelevant {
+                                                Text("Matura")
+                                                    .font(.caption)
+                                                    .foregroundColor(.gray)
+                                            } else {
+                                                Text("")
+                                                    .font(.caption)
+                                                    .foregroundColor(.clear)
+                                            }
+                                        }
+                                        Spacer()
+                                        Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade))
+                                            .foregroundColor(.black)
+                                    }
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 12)
+                                    .frame(maxWidth: .infinity, minHeight: 50)
+                                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
+                                    .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
+                                    .padding([.leading, .trailing], 4)
+                                }
+                                .listRowInsets(EdgeInsets())
+                            }
+                        }
+                        .padding([.leading, .trailing], 8)
                     }
-                    .padding([.leading, .trailing], 8)
                 }
                 .navigationTitle(semester.name)
                 .toolbar {
@@ -245,4 +256,3 @@ struct SubjectAveragesView: View {
         return overallAverage == 0 ? "-" : String(format: "%.1f", overallMinusPoints)
     }
 }
-

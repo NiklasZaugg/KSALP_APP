@@ -142,53 +142,66 @@ struct SubjectView: View {
 
     private var gradesListView: some View {
         VStack(spacing: 8) {
-            ForEach(subject.grades.indices, id: \.self) { index in
-                Button(action: {
-                    selectedGrade = subject.grades[index]
-                }) {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(subject.grades[index].name)
-                                .font(.headline)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.trailing, 8)
-                            HStack {
-                                Image(systemName: "scalemass")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 15, height: 15)
-                                    .foregroundColor(.gray)
-                                Text(subject.grades[index].weight.formattedAsInput())
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                Spacer().frame(width: 8)
-                                Image(systemName: "calendar")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 15, height: 15)
-                                    .foregroundColor(.gray)
-                                Text(formattedDate(subject.grades[index].date))
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
+            if subject.grades.isEmpty {
+                VStack {
+                    Spacer()
+                    Text("Keine Noten vorhanden")
+                        .font(.title3)
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
+                        .padding(.top,150)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ForEach(subject.grades.indices, id: \.self) { index in
+                    Button(action: {
+                        selectedGrade = subject.grades[index]
+                    }) {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(subject.grades[index].name)
+                                    .font(.headline)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.trailing, 8)
+                                HStack {
+                                    Image(systemName: "scalemass")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 15, height: 15)
+                                        .foregroundColor(.gray)
+                                    Text(subject.grades[index].weight.formattedAsInput())
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                    Spacer().frame(width: 8)
+                                    Image(systemName: "calendar")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 15, height: 15)
+                                        .foregroundColor(.gray)
+                                    Text(formattedDate(subject.grades[index].date))
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
                             }
+                            Spacer()
+                            let scoreText = String(format: "%.2f", subject.grades[index].score)
+                            Text(subject.grades.isEmpty ? "-" : scoreText)
+                                .font(.headline)
+                                .frame(alignment: .trailing)
                         }
-                        Spacer()
-                        let scoreText = String(format: "%.2f", subject.grades[index].score)
-                        Text(subject.grades.isEmpty ? "-" : scoreText)
-                            .font(.headline)
-                            .frame(alignment: .trailing)
-                    }
-                    .padding(8)
-                    .background(subject.grades[index].isFinalExam ? Color.blue.opacity(0.1) : Color.gray.opacity(0.1))
-                    .cornerRadius(10)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(subject.grades[index].isFinalExam ? Color.blue : Color.black, lineWidth: 1)
-                    )
+                        .padding(8)
+                        .background(subject.grades[index].isFinalExam ? Color.blue.opacity(0.1) : Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(subject.grades[index].isFinalExam ? Color.blue : Color.black, lineWidth: 1)
+                        )
 
-                    .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
+                        .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
+                    }
                 }
             }
         }
@@ -222,7 +235,7 @@ struct SubjectView: View {
                     self.editingIsMaturarelevant = self.subject.isMaturarelevant
                     self.showingEditSubjectSheet = true
                 },
-                .default(Text("Fach kopieren")) { 
+                .default(Text("Fach kopieren")) {
                     self.showingCopySubjectSheet = true
                 },
                 .destructive(Text("Fach löschen")) {
