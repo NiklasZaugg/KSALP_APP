@@ -371,12 +371,16 @@ struct SubjectView: View {
             .navigationBarItems(
                 leading: Button("Abbrechen") {
                     showingAddGradeSheet = false
-                    resetAddGradeFields()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        resetAddGradeFields()
+                    }
                 },
                 trailing: Button("Fertig") {
                     addNewGrade()
                     showingAddGradeSheet = false
-                    resetAddGradeFields()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        resetAddGradeFields()
+                    }
                 }
                 .disabled(newScore.isEmpty)
             )
@@ -432,12 +436,16 @@ struct SubjectView: View {
             .navigationBarItems(
                 leading: Button("Abbrechen") {
                     showingAddFinalExamSheet = false
-                    resetAddFinalExamFields()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        resetAddFinalExamFields()
+                    }
                 },
                 trailing: Button("Fertig") {
                     addNewFinalExam()
                     showingAddFinalExamSheet = false
-                    resetAddFinalExamFields()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        resetAddFinalExamFields()
+                    }
                 }
                 .disabled(finalExamScore.isEmpty)
             )
