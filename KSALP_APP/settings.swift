@@ -25,12 +25,10 @@ struct Settings: View {
                     }
                     .alert(isPresented: $showAlert) {
                         Alert(
-                            title: Text("Alle Senester löschen"),
+                            title: Text("Alle Semester löschen"),
                             message: Text("Bist du sicher, dass du alle Semester löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."),
                             primaryButton: .destructive(Text("Löschen")) {
                                 realmManager.deleteAllContents()
-                            
-                                
                             },
                             secondaryButton: .cancel()
                         )
@@ -38,9 +36,7 @@ struct Settings: View {
                 }
                 
                 Section(header: Text("Probleme oder Fragen?")) {
-                    Button(action: {
-                        print("Kontaktiere uns")
-                    }) {
+                    Link(destination: URL(string: "https://nikizaugg.wixsite.com/ksalpenquai/contact-8")!) {
                         HStack {
                             Image(systemName: "envelope")
                                 .foregroundColor(.blue)
@@ -53,9 +49,7 @@ struct Settings: View {
                         .cornerRadius(8)
                     }
                     
-                    Button(action: {
-                        print("Rechtliche Infos")
-                    }) {
+                    Link(destination: URL(string: "https://nikizaugg.wixsite.com/ksalpenquai/privacy-policy")!) {
                         HStack {
                             Image(systemName: "doc.text")
                                 .foregroundColor(.blue)
