@@ -1,5 +1,3 @@
-
-
 import SwiftUI
 
 struct ContentView: View {
@@ -24,6 +22,7 @@ struct ContentView: View {
                     Label("Einstellungen", systemImage: "gearshape")
                 }
         }
+        .accentColor(.black) 
     }
 }
 

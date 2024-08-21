@@ -21,26 +21,31 @@ struct ScheduleView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(sortedClasses, id: \.self) { className in
-                            FavoriteClassButton(className: className, isFavorite: favoriteClasses.contains(className), isSelected: className == selectedClass) {
-                                toggleFavorite(className: className)
-                            } onSelect: {
-                                selectedClass = className
+            ZStack {
+                // Background gradient
+                LinearGradient(gradient: Gradient(colors: [.blue, .white]), startPoint: .top, endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all)
+
+                VStack {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(sortedClasses, id: \.self) { className in
+                                FavoriteClassButton(className: className, isFavorite: favoriteClasses.contains(className), isSelected: className == selectedClass) {
+                                    toggleFavorite(className: className)
+                                } onSelect: {
+                                    selectedClass = className
+                                }
                             }
                         }
+                        .padding()
                     }
-                    .padding()
-                }
-                Spacer()
-                if let selectedClass = selectedClass {
-                    TimetableView(className: selectedClass)
+                    Spacer()
+                    if let selectedClass = selectedClass {
+                        TimetableView(className: selectedClass)
+                    }
                 }
             }
             .navigationTitle("Stundenplan")
-            .background(Color.white.edgesIgnoringSafeArea(.all))
         }
     }
     
@@ -95,6 +100,8 @@ struct TimetableView: View {
         PDFViewer(pdfName: "\(className).pdf")
             .padding()
             .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 5)
     }
 }
 

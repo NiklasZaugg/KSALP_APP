@@ -1,12 +1,15 @@
 import SwiftUI
 
 struct PointCalculatorView: View {
-    @State private var inputScore: String = ""
     @State private var maxScore: String = ""
-    @State private var calculatedGrade: Double? = nil
     @State private var currentScore: String = ""
-    @FocusState private var isMaxScoreFieldFocused: Bool
+    @State private var calculatedGrade: Double? = nil
     @State private var isCurrentScoreCalculated: Bool = false
+    @State private var activeField: ActiveField? = nil // Track the active field
+
+    enum ActiveField {
+        case maxScore, currentScore
+    }
 
     var body: some View {
         VStack {
@@ -46,18 +49,41 @@ struct PointCalculatorView: View {
             VStack(spacing: 16) {
                 Text("Maximalpunktzahl:")
                     .padding(.bottom, -10.0)
-                TextField("Max Punktzahl", text: $maxScore)
-                    .keyboardType(.numbersAndPunctuation)
-                    .focused($isMaxScoreFieldFocused)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
+                Button(action: {
+                    activeField = .maxScore
+                }) {
+                    Text(maxScore.isEmpty ? "-" : maxScore)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal)
+                        .background(activeField == .maxScore ? Color.blue.opacity(0.2) : Color.white)
+                        .cornerRadius(5)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(activeField == .maxScore ? Color.blue : Color.gray, lineWidth: 1)
+                        )
+                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+                }
+                .padding(.horizontal)
 
                 Text("Erreichte Punktzahl:")
                     .padding(.bottom, -10.0)
-                TextField("Punktzahl", text: $currentScore)
-                    .disabled(true)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
+                Button(action: {
+                    activeField = .currentScore
+                }) {
+                    Text(currentScore.isEmpty ? "-" : currentScore)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal)
+                        .background(activeField == .currentScore ? Color.blue.opacity(0.2) : Color.white)
+                        .cornerRadius(5)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(activeField == .currentScore ? Color.blue : Color.gray, lineWidth: 1)
+                        )
+                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+                }
+                .padding(.horizontal)
             }
 
             VStack(spacing: 10) {
@@ -66,8 +92,7 @@ struct PointCalculatorView: View {
                         ForEach(1..<4) { col in
                             let number = row * 3 + col
                             Button(action: {
-                                self.inputScore += String(number)
-                                self.currentScore += String(number)
+                                addCharacterToActiveField(String(number))
                             }) {
                                 Text("\(number)")
                                     .font(.largeTitle)
@@ -82,8 +107,7 @@ struct PointCalculatorView: View {
 
                 HStack(spacing: 10) {
                     Button(action: {
-                        self.inputScore += "0"
-                        self.currentScore += "0"
+                        addCharacterToActiveField("0")
                     }) {
                         Text("0")
                             .font(.largeTitle)
@@ -94,10 +118,7 @@ struct PointCalculatorView: View {
                     }
 
                     Button(action: {
-                        if !self.inputScore.contains(".") {
-                            self.inputScore += "."
-                            self.currentScore += "."
-                        }
+                        addCharacterToActiveField(".")
                     }) {
                         Text(".")
                             .font(.largeTitle)
@@ -111,16 +132,7 @@ struct PointCalculatorView: View {
 
                 HStack(spacing: 10) {
                     Button(action: {
-                        if !self.currentScore.isEmpty {
-                            self.currentScore.removeLast()
-                            if self.currentScore.isEmpty {
-                                self.inputScore = ""
-                            } else if self.currentScore.hasSuffix("+") {
-                                self.inputScore = ""
-                            } else if let lastChar = self.currentScore.last, lastChar.isNumber {
-                                self.inputScore = String(lastChar)
-                            }
-                        }
+                        removeLastCharacterFromActiveField()
                     }) {
                         Image(systemName: "delete.left")
                             .font(.title)
@@ -131,10 +143,7 @@ struct PointCalculatorView: View {
                     }
 
                     Button(action: {
-                        if !self.currentScore.hasSuffix("+") && !self.currentScore.isEmpty && !self.inputScore.isEmpty {
-                            self.currentScore += "+"
-                            self.inputScore = ""
-                        }
+                        addCharacterToActiveField("+")
                     }) {
                         Text("+")
                             .font(.title)
@@ -145,13 +154,13 @@ struct PointCalculatorView: View {
                     }
 
                     Button(action: {
-                        self.calculateExpression()
-                        self.isCurrentScoreCalculated = true
+                        calculateExpressionForActiveField()
+                        isCurrentScoreCalculated = true
                     }) {
                         Image(systemName: "arrow.right.circle")
                             .font(.title)
                             .frame(maxWidth: .infinity, maxHeight: 70)
-                            .background(self.canCalculateExpression ? Color(.systemBlue) : Color.gray)
+                            .background(canCalculateExpression ? Color(.systemBlue) : Color.gray)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
@@ -166,22 +175,17 @@ struct PointCalculatorView: View {
     }
 
     private var canCalculateGrade: Bool {
-        guard let _ = Double(maxScore), isValidNumber(currentScore), isCurrentScoreCalculated else {
+        guard let _ = Double(maxScore), isValidExpression(currentScore), isCurrentScoreCalculated else {
             return false
         }
         return true
     }
 
     private var canCalculateExpression: Bool {
-        guard isValidExpression(currentScore) else {
+        guard let fieldValue = getActiveFieldValue(), isValidExpression(fieldValue) else {
             return false
         }
         return true
-    }
-
-    private func isValidNumber(_ number: String) -> Bool {
-        let numberPattern = #"^\d+(\.\d+)?$"#
-        return number.range(of: numberPattern, options: .regularExpression) != nil
     }
 
     private func isValidExpression(_ expression: String) -> Bool {
@@ -189,16 +193,15 @@ struct PointCalculatorView: View {
         return expression.range(of: expressionPattern, options: .regularExpression) != nil
     }
 
-    private func calculateExpression() {
-        if currentScore.hasSuffix("+") {
-            currentScore.removeLast()
-        }
+    private func calculateExpressionForActiveField() {
+        guard let expression = getActiveFieldValue(), !expression.hasSuffix("+") else { return }
 
-        let expression = NSExpression(format: currentScore)
-        if let result = expression.expressionValue(with: nil, context: nil) as? Double {
-            self.currentScore = String(format: "%.2f", result)
+        let nsExpression = NSExpression(format: expression)
+        if let result = nsExpression.expressionValue(with: nil, context: nil) as? Double {
+            let formattedResult = String(format: "%.2f", result)
+            setActiveFieldValue(formattedResult)
         } else {
-            self.currentScore = "Error"
+            setActiveFieldValue("Error")
         }
     }
 
@@ -209,6 +212,52 @@ struct PointCalculatorView: View {
         }
         let percentage = score / maxScore
         self.calculatedGrade = percentage * 5 + 1
+    }
+
+    private func addCharacterToActiveField(_ character: String) {
+        guard var fieldValue = getActiveFieldValue() else { return }
+        
+        if character == "." {
+            let components = fieldValue.split(separator: "+")
+            if let lastComponent = components.last, lastComponent.contains(".") {
+                return
+            }
+        }
+
+        if character == "+" && (fieldValue.isEmpty || fieldValue.hasSuffix("+")) {
+            return
+        }
+        
+        fieldValue += character
+        setActiveFieldValue(fieldValue)
+    }
+
+    private func removeLastCharacterFromActiveField() {
+        guard var fieldValue = getActiveFieldValue(), !fieldValue.isEmpty else { return }
+        fieldValue.removeLast()
+        setActiveFieldValue(fieldValue)
+    }
+
+    private func getActiveFieldValue() -> String? {
+        switch activeField {
+        case .maxScore:
+            return maxScore
+        case .currentScore:
+            return currentScore
+        case .none:
+            return nil
+        }
+    }
+
+    private func setActiveFieldValue(_ value: String) {
+        switch activeField {
+        case .maxScore:
+            maxScore = value
+        case .currentScore:
+            currentScore = value
+        case .none:
+            break
+        }
     }
 }
 

@@ -11,102 +11,63 @@ struct SubjectAveragesView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 4) {
-                    HStack {
-                        VStack {
-                            Text("Gesamtschnitt ")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                            Text(overallAverageText)
-                                .font(.largeTitle)
-                                .bold()
-                                .foregroundColor(.black)
-                            Spacer()
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Mangelpunkte:")
-                                        .font(.caption)
-                                        .foregroundColor(.red)
-                                    Text("\(overallMinusPointsText)")
-                                        .font(.caption)
-                                        .foregroundColor(.red)
-                                }
-                            }
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.gray.opacity(0.2))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color.black, lineWidth: 1.5)
-                                )
+                VStack(spacing: 12) {
+                    HStack(spacing: 5) {
+                        // Gesamtschnitt Card
+                        summaryCard(
+                            title: "Gesamtschnitt",
+                            value: overallAverageText,
+                            subtext: "Mangelpunkte:",
+                            subvalue: overallMinusPointsText,
+                            subvalueColor: .red
                         )
-                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
-
-                        VStack {
-                            Text("Maturaschnitt")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                            Text(maturaAverageText)
-                                .font(.largeTitle)
-                                .bold()
-                                .foregroundColor(.black)
-                            Spacer()
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Pluspunkte:")
-                                        .font(.caption)
-                                        .foregroundColor(.green)
-                                    Text("\(maturaPlusPointsText)")
-                                        .font(.caption)
-                                        .foregroundColor(.green)
-                                }
-                                VStack(alignment: .leading) {
-                                    Text("Minuspunkte:")
-                                        .font(.caption)
-                                        .foregroundColor(.red)
-                                    Text("\(maturaMinusPointsText)")
-                                        .font(.caption)
-                                        .foregroundColor(.red)
-                                }
-                            }
-                        }
-                        .padding()
                         .frame(maxWidth: .infinity)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.gray.opacity(0.2))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color.black, lineWidth: 1.5)
-                                )
-                        )
-                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
 
+                        // Maturaschnitt Card
+                        summaryCard(
+                            title: "Maturaschnitt",
+                            value: maturaAverageText,
+                            subtext: "Pluspunkte:",
+                            subvalue: maturaPlusPointsText,
+                            subvalueColor: .green,
+                            subtext2: "Minuspunkte:",
+                            subvalue2: maturaMinusPointsText,
+                            subvalue2Color: .red
+                        )
+                        .frame(maxWidth: .infinity)
                     }
                     .frame(height: 130)
+                    .frame(width: 371)
 
-                    HStack {
-                        Text("Fächer")
-                            .font(.title)
-                            .bold()
-                            .padding(.top, 4)
-                            .padding(.bottom, 4)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                    VStack(spacing: 0) {
+                        Divider()
                         
-                        Text("\(semester.subjects.count)")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-                            .padding(.top, 4)
-                            .padding(.bottom, 4)
-                            .padding(.trailing, 8)
-                    }
-                    .padding(.horizontal, 8)
-                    .background(Color.white)
-                    .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
+                        HStack {
+                            Text("Fächer")
+                                .font(.title)
+                                .bold()
+                                .padding(.top, 4)
+                                .padding(.bottom, 4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Text("\(semester.subjects.count)")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                                .padding(.top, 4)
+                                .padding(.bottom, 4)
+                                .padding(.trailing, 8)
+                        }
+                        .padding(.horizontal, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.white.opacity(0.0))  
+                                .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
+                        )
 
+                        Divider()
+                    }
+
+                    // Subjects List
                     if semester.subjects.isEmpty {
                         VStack {
                             Spacer()
@@ -119,36 +80,10 @@ struct SubjectAveragesView: View {
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
-                        VStack(spacing: 0) {
+                        VStack(spacing: 8) {
                             ForEach(semester.subjects) { subject in
                                 NavigationLink(destination: SubjectView(subject: subject, semester: semester)) {
-                                    HStack {
-                                        VStack(alignment: .leading) {
-                                            Text(subject.name)
-                                                .foregroundColor(.black)
-                                                .lineLimit(1)
-                                                .truncationMode(.tail)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                            if subject.isMaturarelevant {
-                                                Text("Matura")
-                                                    .font(.caption)
-                                                    .foregroundColor(.gray)
-                                            } else {
-                                                Text("")
-                                                    .font(.caption)
-                                                    .foregroundColor(.clear)
-                                            }
-                                        }
-                                        Spacer()
-                                        Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade))
-                                            .foregroundColor(.black)
-                                    }
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal, 12)
-                                    .frame(maxWidth: .infinity, minHeight: 50)
-                                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
-                                    .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
-                                    .padding([.leading, .trailing], 4)
+                                    subjectRow(subject: subject)
                                 }
                                 .listRowInsets(EdgeInsets())
                             }
@@ -165,7 +100,12 @@ struct SubjectAveragesView: View {
                     }
                 }
                 .preferredColorScheme(.light)
+                .padding()
             }
+            .background(
+                LinearGradient(gradient: Gradient(colors: [.blue, .white]), startPoint: .top, endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all) 
+            )
             .sheet(isPresented: $showingAddSubjectSheet) {
                 NavigationStack {
                     Form {
@@ -192,6 +132,94 @@ struct SubjectAveragesView: View {
             }
         }
     }
+
+    private func summaryCard(title: String, value: String, subtext: String, subvalue: String, subvalueColor: Color, subtext2: String? = nil, subvalue2: String? = nil, subvalue2Color: Color? = nil) -> some View {
+        VStack {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.black)
+            Text(value)
+                .font(.largeTitle)
+                .bold()
+                .foregroundColor(.black)
+            Spacer()
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(subtext)
+                        .font(.caption)
+                        .foregroundColor(subvalueColor)
+                    Text(subvalue)
+                        .font(.caption)
+                        .foregroundColor(subvalueColor)
+                }
+                if let subtext2 = subtext2, let subvalue2 = subvalue2, let subvalue2Color = subvalue2Color {
+                    Spacer()
+                    VStack(alignment: .leading) {
+                        Text(subtext2)
+                            .font(.caption)
+                            .foregroundColor(subvalue2Color)
+                        Text(subvalue2)
+                            .font(.caption)
+                            .foregroundColor(subvalue2Color)
+                    }
+                }
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.white.opacity(0.7))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.black, lineWidth: 1.5)
+                )
+        )
+        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
+    }
+
+
+    private func subjectRow(subject: Subject) -> some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(subject.name)
+                    .font(.headline)
+                    .foregroundColor(.black)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                if subject.isMaturarelevant {
+                    Text("Matura")
+                        .font(.caption)
+                        .foregroundColor(.black)
+                }
+            }
+            Spacer()
+            Text(subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade))
+                .font(.headline)
+                .foregroundColor(.black)
+        }
+        .padding(.vertical, 10)
+        .padding(.horizontal, 15)
+        .frame(maxWidth: .infinity, minHeight: 60)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.white.opacity(0.4), Color.blue.opacity(0.2)]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(Color.black, lineWidth: 1.5)
+                )
+        )
+        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
+        .padding([.leading, .trailing], 6)
+    }
+
 
     private func addNewSubject() {
         realmManager.addSubject(to: semester.id, name: newSubjectName, isMaturarelevant: isMaturarelevant)
@@ -254,5 +282,17 @@ struct SubjectAveragesView: View {
 
     var overallMinusPointsText: String {
         return overallAverage == 0 ? "-" : String(format: "%.1f", overallMinusPoints)
+    }
+}
+
+struct SubjectAveragesView_Previews: PreviewProvider {
+    static var previews: some View {
+        let semester = Semester()
+        semester.name = "Semester 1"
+        semester.subjects.append(Subject(value: ["name": "Mathematik", "isMaturarelevant": true]))
+        semester.subjects.append(Subject(value: ["name": "Biologie", "isMaturarelevant": false]))
+
+        return SubjectAveragesView(semester: semester)
+            .preferredColorScheme(.light)
     }
 }

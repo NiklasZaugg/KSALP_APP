@@ -103,10 +103,10 @@
 			isa = PBXGroup;
 			children = (
 				85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */,
-				859E0A842C00CB3F00032F70 /* ScheduleView.swift */,
 				8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */,
-				859AA35E2BD455AD0011E909 /* GradeDetailView.swift */,
+				859E0A842C00CB3F00032F70 /* ScheduleView.swift */,
 				8597DACB2BE02BF100AB15E4 /* SemesterView.swift */,
+				859AA35E2BD455AD0011E909 /* GradeDetailView.swift */,
 				85EC8B932BFF989300D7153A /* ContentView.swift */,
 				85F389722BAC8157004B8B44 /* SubjectView.swift */,
 				854DEEB32C120CB400386402 /* CopySubjectView.swift */,

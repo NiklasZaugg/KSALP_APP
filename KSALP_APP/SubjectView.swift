@@ -32,85 +32,96 @@ struct SubjectView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack {
-                    averageAndRoundedGradeView
-                    gradesListView
-                    Spacer()
-                }
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        titleView
+            ZStack {  
+                LinearGradient(gradient: Gradient(colors: [.blue, .white]), startPoint: .top, endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all)
+
+                ScrollView {
+                    VStack {
+                        averageAndRoundedGradeView
+                        gradesListView
+                        Spacer()
+                    }
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            titleView
+                        }
+                    }
+                    .sheet(isPresented: $showingAddGradeSheet) {
+                        addGradeSheet
+                    }
+                    .sheet(isPresented: $showingEditSubjectSheet) {
+                        editSubjectSheet
+                    }
+                    .sheet(isPresented: $showingAddFinalExamSheet) {
+                        addFinalExamSheet
+                    }
+                    .sheet(isPresented: $showingCalculatorSheet) {
+                        calculatorSheet
+                    }
+                    .sheet(isPresented: $showingCopySubjectSheet) {
+                        CopySubjectSheet(subject: subject)
+                    }
+                    .sheet(item: $selectedGrade) { grade in
+                        GradeDetailView(
+                            grade: Binding(
+                                get: { grade },
+                                set: { newValue in
+                                    if let index = subject.grades.firstIndex(where: { $0.id == grade.id }) {
+                                        subject.grades[index] = newValue
+                                    }
+                                }
+                            )
+                        )
                     }
                 }
-                .sheet(isPresented: $showingAddGradeSheet) {
-                    addGradeSheet
-                }
-                .sheet(isPresented: $showingEditSubjectSheet) {
-                    editSubjectSheet
-                }
-                .sheet(isPresented: $showingAddFinalExamSheet) {
-                    addFinalExamSheet
-                }
-                .sheet(isPresented: $showingCalculatorSheet) {
-                    calculatorSheet
-                }
-                .sheet(isPresented: $showingCopySubjectSheet) {
-                    CopySubjectSheet(subject: subject)
-                }
-                .sheet(item: $selectedGrade) { grade in
-                    GradeDetailView(
-                        grade: Binding(
-                            get: { grade },
-                            set: { newValue in
-                                if let index = subject.grades.firstIndex(where: { $0.id == grade.id }) {
-                                    subject.grades[index] = newValue
-                                }
-                            }
-                        )
-                    )
-                }
-
-
+                .preferredColorScheme(.light)
+                additionalOptionsView
             }
-            .preferredColorScheme(.light)
-            additionalOptionsView
         }
     }
+
     // Ansicht für Durchschnitt und gerundeten Durchschnitt
     private var averageAndRoundedGradeView: some View {
         HStack(spacing: 20) {
             VStack(spacing: 10) {
                 Text("Durchschnitt")
-                    .font(.headline)
-                    .foregroundColor(.primary)
+                    .font(.subheadline)
+                    .foregroundColor(.black)
                 
                 let averageText = subject.grades.isEmpty ? "-" : String(format: "%.2f", subject.averageGrade)
                 Text(averageText)
-                    .font(.title2)
-                    .foregroundColor(.secondary)
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
             }
             .padding()
             .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.gray, lineWidth: 1)
-                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.1)))
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.blue.opacity(0.1))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.black, lineWidth: 1)
+                    )
+                    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
             )
-            .shadow(radius: 5)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.vertical, 10)
             
             VStack(spacing: 10) {
                 HStack {
                     Text("Zeugnisnote")
-                        .font(.headline)
-                        .foregroundColor(.primary)
+                        .font(.subheadline)
+                        .foregroundColor(.black)
                     
                     Button(action: {
                         showInfoAlert = true
                     }) {
                         Image(systemName: "info.circle")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.black)
                     }
                     .alert(isPresented: $showInfoAlert) {
                         Alert(
@@ -120,25 +131,29 @@ struct SubjectView: View {
                         )
                     }
                 }
-                
-                let roundedText = subject.grades.isEmpty ? "-" : String(format: "%.1f", subject.roundedAverageGrade)
-                Text(roundedText)
-                    .font(.title2)
-                    .foregroundColor(.secondary)
+                Text(subject.grades.isEmpty ? "-" : String(format: "%.1f", subject.roundedAverageGrade))
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
             }
             .padding()
             .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.gray, lineWidth: 1)
-                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.1)))
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.blue.opacity(0.1))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.black, lineWidth: 1)
+                    )
+                    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
             )
-            .shadow(radius: 5)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.vertical, 10)
         }
         .padding(.horizontal)
-
-
     }
+
 
     private var gradesListView: some View {
         VStack(spacing: 8) {
@@ -171,19 +186,23 @@ struct SubjectView: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 15, height: 15)
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(.black)
+                                        .opacity(0.7)
                                     Text(subject.grades[index].weight.formattedAsInput())
                                         .font(.caption)
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(.black)
+                                        .opacity(0.7)
                                     Spacer().frame(width: 8)
                                     Image(systemName: "calendar")
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 15, height: 15)
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(.black)
+                                        .opacity(0.7)
                                     Text(formattedDate(subject.grades[index].date))
                                         .font(.caption)
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(.black)
+                                        .opacity(0.7)
                                 }
                             }
                             Spacer()
@@ -249,90 +268,94 @@ struct SubjectView: View {
 
     private var additionalOptionsView: some View {
         VStack {
-            Button(action: {
-                self.showAdditionalOptions.toggle()
-            }) {
-                Image(systemName: self.showAdditionalOptions ? "x.circle" : "plus.circle")
-                    .font(.largeTitle)
-            }
-            .padding()
-            
-            if showAdditionalOptions {
-                VStack(spacing: 10) {
-                    Button(action: {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            self.showAdditionalOptions = false
-                        }
-                        self.showingAddGradeSheet = true
-                    }) {
-                        HStack {
-                            Text("Note hinzufügen")
-                            Spacer()
-                            Image(systemName: "plus.square")
-                        }
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.2)))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.blue, lineWidth: 1)
-                        )
-                        .shadow(color: Color.blue.opacity(0.5), radius: 3, x: 0, y: 2)
-                    }
-                    
-                    Button(action: {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            self.showAdditionalOptions = false
-                        }
-                        self.showingAddFinalExamSheet = true
-                    }) {
-                        HStack {
-                            Text("Abschlussprüfung hinzufügen")
-                            Spacer()
-                            Image(systemName: "checkmark.square")
-                        }
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.2)))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.blue, lineWidth: 1)
-                        )
-                        .shadow(color: Color.blue.opacity(0.5), radius: 3, x: 0, y: 2)
-                    }
-                    .disabled(subject.grades.isEmpty)
-                    
-                    Button(action: {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            self.showAdditionalOptions = false
-                        }
-                        self.showingCalculatorSheet = true
-                    }) {
-                        HStack {
-                            Text("Wunschnotenrechner")
-                            Spacer()
-                            Image("taschenrechner")
-                                .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.blue)
-                        }
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.2)))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.blue, lineWidth: 1)
-                        )
-                        .shadow(color: Color.blue.opacity(0.5), radius: 3, x: 0, y: 2)
-                    }
+            Spacer()
+            VStack {
+                Button(action: {
+                    self.showAdditionalOptions.toggle()
+                }) {
+                    Image(systemName: self.showAdditionalOptions ? "x.circle" : "plus.circle")
+                        .font(.largeTitle)
                 }
                 .padding()
+                
+                if showAdditionalOptions {
+                    VStack(spacing: 10) {
+                        Button(action: {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                self.showAdditionalOptions = false
+                            }
+                            self.showingAddGradeSheet = true
+                        }) {
+                            HStack {
+                                Text("Note hinzufügen")
+                                Spacer()
+                                Image(systemName: "plus.square")
+                            }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.2)))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.blue, lineWidth: 1)
+                            )
+                            .shadow(color: Color.blue.opacity(0.5), radius: 3, x: 0, y: 2)
+                        }
+                        
+                        Button(action: {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                self.showAdditionalOptions = false
+                            }
+                            self.showingAddFinalExamSheet = true
+                        }) {
+                            HStack {
+                                Text("Abschlussprüfung hinzufügen")
+                                Spacer()
+                                Image(systemName: "checkmark.square")
+                            }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.2)))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.blue, lineWidth: 1)
+                            )
+                            .shadow(color: Color.blue.opacity(0.5), radius: 3, x: 0, y: 2)
+                        }
+                        .disabled(subject.grades.isEmpty)
+                        
+                        Button(action: {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                self.showAdditionalOptions = false
+                            }
+                            self.showingCalculatorSheet = true
+                        }) {
+                            HStack {
+                                Text("Wunschnotenrechner")
+                                Spacer()
+                                Image("taschenrechner")
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.black)
+                            }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue.opacity(0.2)))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.blue, lineWidth: 1)
+                            )
+                            .shadow(color: Color.blue.opacity(0.5), radius: 3, x: 0, y: 2)
+                        }
+                    }
+                    .padding()
+                }
             }
+            .frame(maxWidth: .infinity)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 10)
+            .padding()
         }
-        .frame(maxWidth: .infinity)
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 10)
-        .padding()
     }
+
 
     private var addGradeSheet: some View {
         NavigationView {
@@ -559,5 +582,19 @@ extension Double {
         formatter.maximumFractionDigits = fractionDigits
         
         return formatter.string(from: NSNumber(value: self)) ?? "\(self)"
+    }
+}
+struct SubjectView_Previews: PreviewProvider {
+    static var previews: some View {
+        let subject = Subject(value: ["name": "Mathematik", "isMaturarelevant": true])
+        subject.grades.append(Grade(value: ["name": "Test 1", "score": 4.0, "weight": 1.0, "date": Date()]))
+        subject.grades.append(Grade(value: ["name": "Test 2", "score": 3.7, "weight": 1.0, "date": Date()]))
+        
+        let semester = Semester(value: ["name": "Semester 1"])
+        semester.subjects.append(subject)
+        
+        return SubjectView(subject: subject, semester: semester)
+            .preferredColorScheme(.light)
+            .previewLayout(.sizeThatFits)
     }
 }
