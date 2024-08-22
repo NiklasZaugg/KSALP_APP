@@ -6,7 +6,15 @@ struct SubjectAveragesView: View {
     @State private var showingAddSubjectSheet = false
     @State private var newSubjectName = ""
     @State private var isMaturarelevant = false
+    @State private var sortOption: SortOption = .nameAscending
     private let realmManager = RealmManager()
+
+    enum SortOption: String, CaseIterable {
+        case nameAscending = "Name aufsteigend"
+        case nameDescending = "Name absteigend"
+        case gradeAscending = "Note aufsteigend"
+        case gradeDescending = "Note absteigend"
+    }
 
     var body: some View {
         NavigationStack {
@@ -49,6 +57,23 @@ struct SubjectAveragesView: View {
                                 .padding(.top, 4)
                                 .padding(.bottom, 4)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+
+                            // Sortier-Button
+                            Menu {
+                                ForEach(SortOption.allCases, id: \.self) { option in
+                                    Button(action: {
+                                        sortOption = option
+                                    }) {
+                                        Text(option.rawValue)
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "arrow.up.arrow.down.circle")
+                                    .font(.title2)
+                                    .foregroundColor(.blue)
+                                    .padding(.top, 4)
+                                    .padding(.bottom, 4)
+                            }
                             
                             Text("\(semester.subjects.count)")
                                 .font(.headline)
@@ -60,7 +85,7 @@ struct SubjectAveragesView: View {
                         .padding(.horizontal, 8)
                         .background(
                             RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.white.opacity(0.0))  
+                                .fill(Color.white.opacity(0.0))
                                 .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
                         )
 
@@ -81,7 +106,7 @@ struct SubjectAveragesView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
                         VStack(spacing: 8) {
-                            ForEach(semester.subjects) { subject in
+                            ForEach(sortedSubjects) { subject in
                                 NavigationLink(destination: SubjectView(subject: subject, semester: semester)) {
                                     subjectRow(subject: subject)
                                 }
@@ -104,7 +129,7 @@ struct SubjectAveragesView: View {
             }
             .background(
                 LinearGradient(gradient: Gradient(colors: [.blue, .white]), startPoint: .top, endPoint: .bottom)
-                    .edgesIgnoringSafeArea(.all) 
+                    .edgesIgnoringSafeArea(.all)
             )
             .sheet(isPresented: $showingAddSubjectSheet) {
                 NavigationStack {
@@ -130,6 +155,20 @@ struct SubjectAveragesView: View {
                     }
                 }
             }
+        }
+    }
+
+    // Computed property to sort subjects based on the selected sort option
+    private var sortedSubjects: [Subject] {
+        switch sortOption {
+        case .nameAscending:
+            return semester.subjects.sorted { $0.name < $1.name }
+        case .nameDescending:
+            return semester.subjects.sorted { $0.name > $1.name }
+        case .gradeAscending:
+            return semester.subjects.sorted { $0.averageGrade < $1.averageGrade }
+        case .gradeDescending:
+            return semester.subjects.sorted { $0.averageGrade > $1.averageGrade }
         }
     }
 
@@ -178,7 +217,6 @@ struct SubjectAveragesView: View {
         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
     }
 
-
     private func subjectRow(subject: Subject) -> some View {
         HStack {
             VStack(alignment: .leading) {
@@ -219,7 +257,6 @@ struct SubjectAveragesView: View {
         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
         .padding([.leading, .trailing], 6)
     }
-
 
     private func addNewSubject() {
         realmManager.addSubject(to: semester.id, name: newSubjectName, isMaturarelevant: isMaturarelevant)

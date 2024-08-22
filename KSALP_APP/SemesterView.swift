@@ -5,12 +5,15 @@ struct SemesterView: View {
     @ObservedResults(Semester.self) var semesters
     @State private var showingAddSemester = false
     @State private var newSemesterName = ""
+    @State private var selectedTemplate = "Keine Vorlage"
     @State private var isEditing = false
     @State private var selectedSemester: Semester?
     @State private var editedSemesterName = ""
     @State private var showingDeleteConfirmation = false
     @State private var semesterToDelete: Semester?
     private let realmManager = RealmManager()
+    
+    let schoolYearTemplates = ["Keine Vorlage", "1. Schuljahr", "2. Schuljahr", "3. Schuljahr", "4. Schuljahr", "5. Schuljahr", "6. Schuljahr"]
 
     var body: some View {
         NavigationStack {
@@ -76,7 +79,7 @@ struct SemesterView: View {
                                             .frame(maxWidth: .infinity, minHeight: 100)
                                             .lineLimit(2)
                                             .truncationMode(.tail)
-                                            .background(Color.blue) // Semester background remains blue
+                                            .background(Color.blue)
                                             .cornerRadius(15)
                                             .shadow(radius: 5)
                                     }
@@ -94,6 +97,7 @@ struct SemesterView: View {
                     HStack {
                         Spacer()
                         Button(action: {
+                            self.selectedTemplate = "Keine Vorlage"
                             self.showingAddSemester = true
                         }) {
                             ZStack {
@@ -116,7 +120,7 @@ struct SemesterView: View {
                         isEditing.toggle()
                     }) {
                         Text(isEditing ? "Fertig" : "Bearbeiten")
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                     }
                 }
             }
@@ -124,6 +128,11 @@ struct SemesterView: View {
                 NavigationStack {
                     Form {
                         TextField("Semestername", text: $newSemesterName)
+                        Picker("Schuljahr Vorlage", selection: $selectedTemplate) {
+                            ForEach(schoolYearTemplates, id: \.self) { template in
+                                Text(template).tag(template)
+                            }
+                        }
                     }
                     .navigationTitle("Neues Semester")
                     .toolbar {
@@ -131,44 +140,18 @@ struct SemesterView: View {
                             Button("Abbrechen") {
                                 showingAddSemester = false
                                 newSemesterName = ""
+                                selectedTemplate = "Keine Vorlage"  
                             }
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Fertig") {
                                 if !newSemesterName.isEmpty {
-                                    addSemester(name: newSemesterName)
+                                    addSemester(name: newSemesterName, template: selectedTemplate)
                                     newSemesterName = ""
                                     showingAddSemester = false
                                 }
                             }
                             .disabled(newSemesterName.isEmpty)
-                        }
-                    }
-                }
-            }
-
-            .sheet(item: $selectedSemester) { semester in
-                NavigationStack {
-                    Form {
-                        TextField("Semestername bearbeiten", text: $editedSemesterName)
-                    }
-                    .navigationTitle("Semester bearbeiten")
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Abbrechen") {
-                                self.isEditing = false
-                                selectedSemester = nil
-                            }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Fertig") {
-                                if !editedSemesterName.isEmpty, let selectedSemester = selectedSemester {
-                                    updateSemesterName(semester: selectedSemester, newName: editedSemesterName)
-                                }
-                                self.isEditing = false
-                                self.selectedSemester = nil
-                            }
-                            .disabled(editedSemesterName.isEmpty)
                         }
                     }
                 }
@@ -193,8 +176,8 @@ struct SemesterView: View {
         .preferredColorScheme(.light)
     }
 
-    private func addSemester(name: String) {
-        realmManager.addSemester(name: name)
+    private func addSemester(name: String, template: String) {
+        realmManager.addSemester(name: name, template: template)
     }
 
     private func deleteSemester(_ semesterID: String) {

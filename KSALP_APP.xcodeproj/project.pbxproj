@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		854DEEB42C120CB400386402 /* CopySubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854DEEB32C120CB400386402 /* CopySubjectView.swift */; };
-		8550C15F2C062B4E00FAE856 /* Klassen_23_24 in Resources */ = {isa = PBXBuildFile; fileRef = 8550C15E2C062B4E00FAE856 /* Klassen_23_24 */; };
 		8594B9BA2BFF7BB500C948B8 /* PointCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */; };
 		8597DACC2BE02BF100AB15E4 /* SemesterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8597DACB2BE02BF100AB15E4 /* SemesterView.swift */; };
 		85982D202BD97E91000D9BD2 /* SubjectAveragesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */; };
@@ -21,6 +20,7 @@
 		85C101B22B8A1A1C00460B30 /* KSALP_APPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */; };
 		85C101B62B8A1A1F00460B30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85C101B52B8A1A1F00460B30 /* Assets.xcassets */; };
 		85C101B92B8A1A1F00460B30 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85C101B82B8A1A1F00460B30 /* Preview Assets.xcassets */; };
+		85D63E952C77959E00B56B47 /* Klassen_24_25 in Resources */ = {isa = PBXBuildFile; fileRef = 85D63E942C77959E00B56B47 /* Klassen_24_25 */; };
 		85E234802C18AD7900BBD3D2 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85E2347F2C18AD7900BBD3D2 /* Launch Screen.storyboard */; };
 		85E234822C18B77E00BBD3D2 /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E234812C18B77E00BBD3D2 /* settings.swift */; };
 		85EC8B942BFF989300D7153A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85EC8B932BFF989300D7153A /* ContentView.swift */; };
@@ -43,7 +43,6 @@
 
 /* Begin PBXFileReference section */
 		854DEEB32C120CB400386402 /* CopySubjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopySubjectView.swift; sourceTree = "<group>"; };
-		8550C15E2C062B4E00FAE856 /* Klassen_23_24 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Klassen_23_24; path = ../../../../../Downloads/Klassen_23_24; sourceTree = "<group>"; };
 		8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCalculatorView.swift; sourceTree = "<group>"; };
 		8597DACB2BE02BF100AB15E4 /* SemesterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemesterView.swift; sourceTree = "<group>"; };
 		85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectAveragesView.swift; sourceTree = "<group>"; };
@@ -56,6 +55,7 @@
 		85C101B12B8A1A1C00460B30 /* KSALP_APPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KSALP_APPApp.swift; sourceTree = "<group>"; };
 		85C101B52B8A1A1F00460B30 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		85C101B82B8A1A1F00460B30 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		85D63E942C77959E00B56B47 /* Klassen_24_25 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Klassen_24_25; path = ../../../../../Downloads/Klassen_24_25; sourceTree = "<group>"; };
 		85E2347F2C18AD7900BBD3D2 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		85E234812C18B77E00BBD3D2 /* settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = settings.swift; sourceTree = "<group>"; };
 		85EC8B932BFF989300D7153A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 				859E0A8B2C01237A00032F70 /* RealmManager.swift */,
 				859E0A8D2C01253200032F70 /* class.swift */,
 				85E2347F2C18AD7900BBD3D2 /* Launch Screen.storyboard */,
-				8550C15E2C062B4E00FAE856 /* Klassen_23_24 */,
+				85D63E942C77959E00B56B47 /* Klassen_24_25 */,
 				85C101B52B8A1A1F00460B30 /* Assets.xcassets */,
 				85C101B72B8A1A1F00460B30 /* Preview Content */,
 			);
@@ -197,9 +197,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				85C101B92B8A1A1F00460B30 /* Preview Assets.xcassets in Resources */,
+				85D63E952C77959E00B56B47 /* Klassen_24_25 in Resources */,
 				85C101B62B8A1A1F00460B30 /* Assets.xcassets in Resources */,
 				85E234802C18AD7900BBD3D2 /* Launch Screen.storyboard in Resources */,
-				8550C15F2C062B4E00FAE856 /* Klassen_23_24 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,7 +354,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"KSALP_APP/Preview Content\"";
 				DEVELOPMENT_TEAM = 98CJC8FY24;
 				ENABLE_PREVIEWS = YES;
@@ -391,7 +391,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"KSALP_APP/Preview Content\"";
 				DEVELOPMENT_TEAM = 98CJC8FY24;
 				ENABLE_PREVIEWS = YES;

@@ -4,16 +4,16 @@ import PDFKit
 struct ScheduleView: View {
     let classes = [
         "U23a", "U23b", "U23c", "U23d", "U23e", "U23f", "U23g", "U23h", "U23i", "U23k", "U23l", "U23m", "U23n",
-        "U22a", "U22b", "U22c", "U22d", "U22e", "U22f", "U22g", "U22h", "U22i", "U22k", "U22l", "U22m", "U22n",
+        "U24a", "U24b", "U24c", "U24d", "U24e", "U24f", "U24g", "U24h", "U24i", "U24k", "U24l", "U24m", "U24n", "U24o",
         "G23a", "G23b", "G23c", "G23d", "G23e", "G23f", "G23g", "G23h", "G23i", "G23k", "G23l", "G23m", "G23n",
         "T23a", "T23b",
         "G22a", "G22b", "G22c", "G22d", "G22e", "G22f", "G22g", "G22h", "G22i", "G22k", "G22l", "G22m",
+        "G21a", "G21b", "G21c", "G21e", "G21f", "G21g", "G21h", "G21i", "G21k", "G21l", "G21m", "G21n",
         "T22a", "T22b",
-        "G21a", "G21b", "G21c", "G21d", "G21e", "G21f", "G21g", "G21h", "G21i", "G21k", "G21l", "G21m", "G21n",
+        "G24a", "G24b", "G24c", "G24d", "G24e", "G24f", "G24g", "G24h", "G24i", "G24k", "G24l", "G24m",
         "T21a", "T21b",
-        "G20a", "G20b", "G20c", "G20d", "G20e", "G20f", "G20g", "G20h", "G20i", "G20k", "G20l",
         "T20a", "T20b",
-        "T19a", "T19b"
+        "T24a", "T24b"
     ]
     
     @State private var selectedClass: String? = nil
@@ -116,14 +116,14 @@ struct PDFViewer: UIViewRepresentable {
         pdfView.displayDirection = .vertical
         pdfView.displayMode = .singlePageContinuous
 
-        if let path = Bundle.main.url(forResource: pdfName, withExtension: nil, subdirectory: "Klassen_23_24") {
+        if let path = Bundle.main.url(forResource: pdfName, withExtension: nil, subdirectory: "Klassen_24_25") {
             pdfView.document = PDFDocument(url: path)
         }
         return pdfView
     }
 
     func updateUIView(_ uiView: PDFView, context: Context) {
-        if let path = Bundle.main.url(forResource: pdfName, withExtension: nil, subdirectory: "Klassen_23_24") {
+        if let path = Bundle.main.url(forResource: pdfName, withExtension: nil, subdirectory: "Klassen_24_25") {
             uiView.document = PDFDocument(url: path)
             uiView.scaleFactor = fixedScaleFactor
         }

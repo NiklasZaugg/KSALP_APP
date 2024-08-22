@@ -12,9 +12,11 @@ class RealmManager {
         }
     }
 
-    func addSemester(name: String) {
+    func addSemester(name: String, template: String) {
         let semester = Semester()
         semester.name = name
+
+        addSubjectsToSemester(semester: semester, template: template)
 
         do {
             try realm.write {
@@ -22,6 +24,49 @@ class RealmManager {
             }
         } catch let error as NSError {
             print("Fehler beim Hinzufügen des Semesters: \(error.localizedDescription)")
+        }
+    }
+
+    private func addSubjectsToSemester(semester: Semester, template: String) {
+        if template == "Keine Vorlage" {
+            return  
+        }
+        
+        var subjects: [String] = []
+        switch template {
+        case "1. Schuljahr":
+            subjects = ["Mathematik", "Geografie", "Informatik", "Musik", "Deutsch", "Sport",
+                        "Geschichte", "Religion", "Natur und Technik", "Englisch",
+                        "Bildnerisches Gestalten", "Französisch", "Textiles Gestalten"]
+        case "2. Schuljahr":
+            subjects = ["Geografie", "Mathematik", "Französisch", "Natur und Technik", "Deutsch",
+                        "Sport", "Bildnerisches Gestalten", "Musik", "Religion", "Geschichte",
+                        "Englisch", "Informatik", "Biologie", "Hauswirtschaft"]
+        case "3. Schuljahr":
+            subjects = ["Mathematik", "Sport", "Französisch", "Geografie", "Deutsch",
+                        "Englisch", "Informatik", "Schwerpunktfach", "Musik",
+                        "Geschichte", "Chemie", "Bildnerisches Gestalten", "Biologie", "Wirtschaft & Recht"]
+        case "4. Schuljahr":
+            subjects = ["Deutsch", "Sport", "Mathematik", "Musik", "Englisch", "Religion",
+                        "Informatik", "Geschichte", "Chemie", "Schwerpunktfach",
+                        "Biologie", "Französisch", "Geografie", "Physik"]
+        case "5. Schuljahr":
+            subjects = ["Englisch", "Physik", "Sport", "Französisch", "Schwerpunktfach",
+                        "Philosophie", "Mathematik", "Ergänzungsfach", "Deutsch",
+                        "Politische Bildung / Wirtschaft", "Wahlpflichtfach",
+                        "Chemie", "Geschichte"]
+        case "6. Schuljahr":
+                subjects = ["Englisch", "Geschichte", "Französisch", "Deutsch", "Mathematik",
+                            "Sport", "Schwerpunktfach", "Biologie", "Ergänzungsfach",
+                            "Physik", "Geografie", "Philosophie"]
+        default:
+            subjects = []  // Default subject if no specific template is matched
+        }
+
+        for subjectName in subjects {
+            let subject = Subject()
+            subject.name = subjectName
+            semester.subjects.append(subject)
         }
     }
 

@@ -5,7 +5,7 @@ struct PointCalculatorView: View {
     @State private var currentScore: String = ""
     @State private var calculatedGrade: Double? = nil
     @State private var isCurrentScoreCalculated: Bool = false
-    @State private var activeField: ActiveField? = nil // Track the active field
+    @State private var activeField: ActiveField? = nil 
 
     enum ActiveField {
         case maxScore, currentScore
