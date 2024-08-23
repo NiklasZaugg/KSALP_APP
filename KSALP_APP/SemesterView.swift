@@ -140,7 +140,7 @@ struct SemesterView: View {
                             Button("Abbrechen") {
                                 showingAddSemester = false
                                 newSemesterName = ""
-                                selectedTemplate = "Keine Vorlage"  
+                                selectedTemplate = "Keine Vorlage"
                             }
                         }
                         ToolbarItem(placement: .confirmationAction) {
@@ -152,6 +152,33 @@ struct SemesterView: View {
                                 }
                             }
                             .disabled(newSemesterName.isEmpty)
+                        }
+                    }
+                }
+            }
+
+            .sheet(item: $selectedSemester) { semester in
+                NavigationStack {
+                    Form {
+                        TextField("Semestername bearbeiten", text: $editedSemesterName)
+                    }
+                    .navigationTitle("Semester bearbeiten")
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Abbrechen") {
+                                self.isEditing = false
+                                selectedSemester = nil
+                            }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Fertig") {
+                                if !editedSemesterName.isEmpty, let selectedSemester = selectedSemester {
+                                    updateSemesterName(semester: selectedSemester, newName: editedSemesterName)
+                                }
+                                self.isEditing = false
+                                self.selectedSemester = nil
+                            }
+                            .disabled(editedSemesterName.isEmpty)
                         }
                     }
                 }

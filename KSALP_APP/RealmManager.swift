@@ -29,9 +29,9 @@ class RealmManager {
 
     private func addSubjectsToSemester(semester: Semester, template: String) {
         if template == "Keine Vorlage" {
-            return  
+            return
         }
-        
+
         var subjects: [String] = []
         switch template {
         case "1. Schuljahr":
@@ -56,16 +56,27 @@ class RealmManager {
                         "Politische Bildung / Wirtschaft", "Wahlpflichtfach",
                         "Chemie", "Geschichte"]
         case "6. Schuljahr":
-                subjects = ["Englisch", "Geschichte", "Französisch", "Deutsch", "Mathematik",
-                            "Sport", "Schwerpunktfach", "Biologie", "Ergänzungsfach",
-                            "Physik", "Geografie", "Philosophie"]
+            subjects = ["Englisch", "Geschichte", "Französisch", "Deutsch", "Mathematik",
+                        "Sport", "Schwerpunktfach", "Biologie", "Ergänzungsfach",
+                        "Physik", "Geografie", "Philosophie", "Maturaarbeit"]
         default:
-            subjects = []  // Default subject if no specific template is matched
+            subjects = []
         }
+
+        subjects.sort()
 
         for subjectName in subjects {
             let subject = Subject()
             subject.name = subjectName
+
+            if template == "5. Schuljahr" && (subjectName == "Chemie" || subjectName == "Wahlpflichtfach") {
+                subject.isMaturarelevant = true
+            }
+
+            if template == "6. Schuljahr" && subjectName != "Sport" {
+                subject.isMaturarelevant = true
+            }
+
             semester.subjects.append(subject)
         }
     }
@@ -178,14 +189,14 @@ class RealmManager {
                 let finalExamCount = finalExamGrades.count + 1
                 let totalFinalExamWeight = totalNonFinalExamWeight
                 let individualFinalExamWeight = finalExamCount > 0 ? totalFinalExamWeight / Double(finalExamCount) : 0.0
-                
+
                 try realm.write {
                     for index in subject.grades.indices {
                         if subject.grades[index].isFinalExam {
                             subject.grades[index].weight = individualFinalExamWeight
                         }
                     }
-                    
+
                     let newGrade = Grade()
                     newGrade.name = name
                     newGrade.score = score
@@ -233,7 +244,7 @@ class RealmManager {
                 let finalExamGrades = subject.grades.filter { $0.isFinalExam }
                 let totalFinalExamWeight = totalNonFinalExamWeight
                 let individualFinalExamWeight = finalExamGrades.isEmpty ? 0 : totalFinalExamWeight / Double(finalExamGrades.count)
-                
+
                 try realm.write {
                     for index in subject.grades.indices {
                         if subject.grades[index].isFinalExam {
@@ -255,7 +266,7 @@ class RealmManager {
                 newSubject.name = subject.name
                 newSubject.isMaturarelevant = subject.isMaturarelevant
                 newSubject.grades.append(objectsIn: subject.grades)
-                
+
                 try realm.write {
                     semester.subjects.append(newSubject)
                 }
@@ -264,6 +275,7 @@ class RealmManager {
             print("Fehler beim Kopieren des Fachs: \(error.localizedDescription)")
         }
     }
+
     func deleteAllContents() {
         try! realm.write {
             realm.deleteAll()

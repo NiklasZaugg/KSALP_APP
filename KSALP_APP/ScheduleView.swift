@@ -3,17 +3,17 @@ import PDFKit
 
 struct ScheduleView: View {
     let classes = [
-        "U23a", "U23b", "U23c", "U23d", "U23e", "U23f", "U23g", "U23h", "U23i", "U23k", "U23l", "U23m", "U23n",
         "U24a", "U24b", "U24c", "U24d", "U24e", "U24f", "U24g", "U24h", "U24i", "U24k", "U24l", "U24m", "U24n", "U24o",
+        "U23a", "U23b", "U23c", "U23d", "U23e", "U23f", "U23g", "U23h", "U23i", "U23k", "U23l", "U23m", "U23n",
+        "G24a", "G24b", "G24c", "G24d", "G24e", "G24f", "G24g", "G24h", "G24i", "G24k", "G24l", "G24m",
+        "T24a", "T24b",
         "G23a", "G23b", "G23c", "G23d", "G23e", "G23f", "G23g", "G23h", "G23i", "G23k", "G23l", "G23m", "G23n",
         "T23a", "T23b",
+        "T22a", "T22b",
         "G22a", "G22b", "G22c", "G22d", "G22e", "G22f", "G22g", "G22h", "G22i", "G22k", "G22l", "G22m",
         "G21a", "G21b", "G21c", "G21e", "G21f", "G21g", "G21h", "G21i", "G21k", "G21l", "G21m", "G21n",
-        "T22a", "T22b",
-        "G24a", "G24b", "G24c", "G24d", "G24e", "G24f", "G24g", "G24h", "G24i", "G24k", "G24l", "G24m",
         "T21a", "T21b",
-        "T20a", "T20b",
-        "T24a", "T24b"
+        "T20a", "T20b"
     ]
     
     @State private var selectedClass: String? = nil
