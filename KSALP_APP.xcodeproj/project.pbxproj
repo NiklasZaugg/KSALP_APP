@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		854DEEB42C120CB400386402 /* CopySubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854DEEB32C120CB400386402 /* CopySubjectView.swift */; };
+		856213AD2C792E00005EBF28 /* KSALP-APP-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 856213AC2C792E00005EBF28 /* KSALP-APP-Info.plist */; };
 		8594B9BA2BFF7BB500C948B8 /* PointCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */; };
 		8597DACC2BE02BF100AB15E4 /* SemesterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8597DACB2BE02BF100AB15E4 /* SemesterView.swift */; };
 		85982D202BD97E91000D9BD2 /* SubjectAveragesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */; };
@@ -43,6 +44,7 @@
 
 /* Begin PBXFileReference section */
 		854DEEB32C120CB400386402 /* CopySubjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopySubjectView.swift; sourceTree = "<group>"; };
+		856213AC2C792E00005EBF28 /* KSALP-APP-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "KSALP-APP-Info.plist"; path = "../../../../../.Trash/KSALP-APP-Info.plist"; sourceTree = "<group>"; };
 		8594B9B92BFF7BB500C948B8 /* PointCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCalculatorView.swift; sourceTree = "<group>"; };
 		8597DACB2BE02BF100AB15E4 /* SemesterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemesterView.swift; sourceTree = "<group>"; };
 		85982D1F2BD97E91000D9BD2 /* SubjectAveragesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectAveragesView.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				859E0A8B2C01237A00032F70 /* RealmManager.swift */,
 				859E0A8D2C01253200032F70 /* class.swift */,
 				85E2347F2C18AD7900BBD3D2 /* Launch Screen.storyboard */,
+				856213AC2C792E00005EBF28 /* KSALP-APP-Info.plist */,
 				85D63E942C77959E00B56B47 /* Klassen_24_25 */,
 				85C101B52B8A1A1F00460B30 /* Assets.xcassets */,
 				85C101B72B8A1A1F00460B30 /* Preview Content */,
@@ -197,6 +200,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				85C101B92B8A1A1F00460B30 /* Preview Assets.xcassets in Resources */,
+				856213AD2C792E00005EBF28 /* KSALP-APP-Info.plist in Resources */,
 				85D63E952C77959E00B56B47 /* Klassen_24_25 in Resources */,
 				85C101B62B8A1A1F00460B30 /* Assets.xcassets in Resources */,
 				85E234802C18AD7900BBD3D2 /* Launch Screen.storyboard in Resources */,
@@ -354,7 +358,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"KSALP_APP/Preview Content\"";
 				DEVELOPMENT_TEAM = 98CJC8FY24;
 				ENABLE_PREVIEWS = YES;
@@ -372,6 +376,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "niklas.KSALP-APP";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -391,7 +396,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"KSALP_APP/Preview Content\"";
 				DEVELOPMENT_TEAM = 98CJC8FY24;
 				ENABLE_PREVIEWS = YES;
@@ -409,6 +414,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "niklas.KSALP-APP";
 				PRODUCT_NAME = "$(TARGET_NAME)";

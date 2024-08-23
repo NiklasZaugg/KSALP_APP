@@ -65,7 +65,7 @@ struct Settings: View {
                 }
                 
                 Section {
-                    Text("Copyright © 2024 Niklas Zaugg. Version 1.0.3(2)")
+                    Text("Copyright © 2024 Niklas Zaugg. Version 1.0.3(3)")
                         .font(.caption)
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity, alignment: .center)
