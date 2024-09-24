@@ -18,7 +18,6 @@ struct SemesterView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background gradient
                 LinearGradient(gradient: Gradient(colors: [.blue, .white]), startPoint: .top, endPoint: .bottom)
                     .edgesIgnoringSafeArea(.all)
 

@@ -82,7 +82,6 @@ struct SubjectView: View {
         }
     }
 
-    // Ansicht für Durchschnitt und gerundeten Durchschnitt
     private var averageAndRoundedGradeView: some View {
         HStack(spacing: 20) {
             VStack(spacing: 10) {

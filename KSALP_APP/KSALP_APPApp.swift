@@ -20,7 +20,7 @@ struct YourApp: SwiftUI.App {
         }
     }
 
-    private func configureRealm() {//??
+    private func configureRealm() {
         let config = Realm.Configuration(
             schemaVersion: 1,
             migrationBlock: { migration, oldSchemaVersion in

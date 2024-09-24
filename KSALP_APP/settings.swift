@@ -36,7 +36,7 @@ struct Settings: View {
                 }
                 
                 Section(header: Text("Probleme oder Fragen?")) {
-                    Link(destination: URL(string: "https://nikizaugg.wixsite.com/ksalpenquai/contact-8")!) {
+                    Link(destination: URL(string: "https://www.gradeez.ch/contact-8")!) {
                         HStack {
                             Image(systemName: "envelope")
                                 .foregroundColor(.blue)
@@ -49,7 +49,7 @@ struct Settings: View {
                         .cornerRadius(8)
                     }
                     
-                    Link(destination: URL(string: "https://nikizaugg.wixsite.com/ksalpenquai/privacy-policy")!) {
+                    Link(destination: URL(string: "https://www.gradeez.ch/privacy-policy")!) {
                         HStack {
                             Image(systemName: "doc.text")
                                 .foregroundColor(.blue)
@@ -65,7 +65,7 @@ struct Settings: View {
                 }
                 
                 Section {
-                    Text("Copyright © 2024 Niklas Zaugg. Version 1.0.3(3)")
+                    Text("Copyright © 2024 Niklas Zaugg. Version 1.1")
                         .font(.caption)
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity, alignment: .center)

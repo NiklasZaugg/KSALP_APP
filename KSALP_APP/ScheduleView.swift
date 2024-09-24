@@ -22,7 +22,6 @@ struct ScheduleView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                // Background gradient
                 LinearGradient(gradient: Gradient(colors: [.blue, .white]), startPoint: .top, endPoint: .bottom)
                     .edgesIgnoringSafeArea(.all)
 

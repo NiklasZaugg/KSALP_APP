@@ -33,7 +33,7 @@ class Subject: Object, Identifiable {
     var roundedAverageGrade: Double {
         let average = averageGrade
         let adjustedAverage: Double
-
+ 
         if isMaturarelevant, let finalExam = grades.first(where: { $0.isFinalExam }) {
             let adjustedTotalWeight = grades.reduce(0) { $0 + $1.weight } + 0.01
             let adjustedTotalScore = grades.reduce(0) { $0 + ($1.score * $1.weight) } + (finalExam.score * 0.01)

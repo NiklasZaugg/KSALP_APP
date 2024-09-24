@@ -21,7 +21,6 @@ struct SubjectAveragesView: View {
             ScrollView {
                 VStack(spacing: 12) {
                     HStack(spacing: 5) {
-                        // Gesamtschnitt Card
                         summaryCard(
                             title: "Gesamtschnitt",
                             value: overallAverageText,
@@ -31,7 +30,6 @@ struct SubjectAveragesView: View {
                         )
                         .frame(maxWidth: .infinity)
 
-                        // Maturaschnitt Card
                         summaryCard(
                             title: "Maturaschnitt",
                             value: maturaAverageText,
@@ -58,7 +56,6 @@ struct SubjectAveragesView: View {
                                 .padding(.bottom, 4)
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                            // Sortier-Button
                             Menu {
                                 ForEach(SortOption.allCases, id: \.self) { option in
                                     Button(action: {
@@ -92,7 +89,6 @@ struct SubjectAveragesView: View {
                         Divider()
                     }
 
-                    // Subjects List
                     if semester.subjects.isEmpty {
                         VStack {
                             Spacer()
@@ -158,7 +154,6 @@ struct SubjectAveragesView: View {
         }
     }
 
-    // Computed property to sort subjects based on the selected sort option
     private var sortedSubjects: [Subject] {
         switch sortOption {
         case .nameAscending:
